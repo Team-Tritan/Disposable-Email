@@ -5,12 +5,43 @@
     import Placeholder from './lib/PlaceholderMessage.svelte';
     import MailContainer from './lib/Mailbox/MailboxContainer.svelte';
     import { inbox } from './stores/mailbox';
-    
+    import { io } from './lib/webSocketConnection';
+    import { onMount } from 'svelte';
+    import PlaceholderMessage from './lib/PlaceholderMessage.svelte';
+
     let inbox_ = [];
+
+    let imapConnected = false;
+    
+    let inboxDetails = {
+        email: null,
+        password: null
+    };
 
     inbox.subscribe(e => {
         inbox_ = e;
     })
+
+    onMount(() => {
+        io.on('imapConnected', (email, password) => {
+            imapConnected = true;
+
+            inboxDetails.email = email;
+            inboxDetails.password = password;
+        });
+
+        setInterval(() => {
+            if(!imapConnected)
+                return;
+
+            io.emit("refresh");
+        }, 5000);
+
+        io.on("messageReceived", (e) => {
+            inbox.update(i => [...i, e]);
+            console.log(e);
+        });
+    });
 
 </script>
 
@@ -20,10 +51,10 @@
             <div style="height: 20px; margin-top: auto; margin-bottom: auto; margin-right: 7px;">
                 <IoMdMail />
             </div>
-            <h1>something@tritan.dev</h1>
+            <h1>{inboxDetails.email ? inboxDetails.email : "loading.."}</h1>
         </div>
         <div class="right_sidebar">
-            <div style="height: 25px;">
+            <div style="height: 25px;"> 
                 <IoMdSave />
             </div>
             <div style="height: 25px; margin-left: 10px;">
@@ -31,6 +62,11 @@
             </div>
         </div>
     </nav>
+    {#if !imapConnected}
+        <div style="width: 100%; padding: 5px 0px; background-color: #DAA06D; text-align: center;">
+            Connecting to server...
+        </div>
+    {/if}
     <div class="inbox_container">
         {#if inbox_.length == 0}
             <Placeholder />

@@ -9,7 +9,7 @@ interface Attachments {
     internal_safe_url: string;
 }
 
-interface Mail {
+export interface Mail {
     from: string;
     to: string;
     date: Date;
@@ -95,6 +95,10 @@ class ImapWrapper extends EventEmitter {
                     });
                 });
             });
+
+            fetch.on("error", (e) => {
+                console.log(e);
+            })
         });
     }
 

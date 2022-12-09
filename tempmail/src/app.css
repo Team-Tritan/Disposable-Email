@@ -96,6 +96,7 @@ h6 {
 
 .mailbox_container {
     width: 100%;
+    height: fit-content;
     text-align: left;
     border-collapse: collapse;
 }
