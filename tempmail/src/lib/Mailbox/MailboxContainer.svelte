@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { inbox } from "../../stores/mailbox";
+    import { inbox } from "../stores/mailbox";
 
     let inbox_ = [];
 

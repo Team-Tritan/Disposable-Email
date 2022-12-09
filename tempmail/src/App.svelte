@@ -1,80 +1,83 @@
 <script lang="ts">
-    import IoIosLogOut from 'svelte-icons/io/IoIosLogOut.svelte';
-    import IoMdSave from 'svelte-icons/io/IoMdSave.svelte'
-    import IoMdMail from 'svelte-icons/io/IoMdMail.svelte';
-    import Placeholder from './lib/PlaceholderMessage.svelte';
-    import MailContainer from './lib/Mailbox/MailboxContainer.svelte';
-    import { inbox } from './stores/mailbox';
-    import { io } from './lib/webSocketConnection';
-    import { onMount } from 'svelte';
-    import PlaceholderMessage from './lib/PlaceholderMessage.svelte';
+	import { inbox } from "./lib/stores/mailbox";
+	import { io } from "./lib/webSocketConnection";
+	import { onMount } from "svelte";
+	import IoIosLogOut from "svelte-icons/io/IoIosLogOut.svelte";
+	import IoMdSave from "svelte-icons/io/IoMdSave.svelte";
+	import IoMdMail from "svelte-icons/io/IoMdMail.svelte";
+	import Placeholder from "./lib/PlaceholderMessage.svelte";
+	import MailContainer from "./lib/Mailbox/MailboxContainer.svelte";
+	import StatusBar from "./lib/StatusBar.svelte";
 
-    let inbox_ = [];
+	let inbox_ = [];
 
-    let imapConnected = false;
-    
-    let inboxDetails = {
-        email: null,
-        password: null
-    };
+	let imapConnected = false;
+	let ioConnected = false;
 
-    inbox.subscribe(e => {
-        inbox_ = e;
-    })
+	let inboxDetails = {
+		email: null,
+		password: null,
+	};
 
-    onMount(() => {
-        io.on('imapConnected', (email, password) => {
-            imapConnected = true;
+	inbox.subscribe((e) => {
+		inbox_ = e;
+	});
 
-            inboxDetails.email = email;
-            inboxDetails.password = password;
-        });
+	onMount(() => {
+		io.on("open", () => {
+			ioConnected = true;
+		});
 
-        setInterval(() => {
-            if(!imapConnected)
-                return;
+		io.on("imapConnected", (email, password) => {
+			imapConnected = true;
 
-            io.emit("refresh");
-        }, 5000);
+			inboxDetails.email = email;
+			inboxDetails.password = password;
+		});
 
-        io.on("messageReceived", (e) => {
-            inbox.update(i => [...i, e]);
-            console.log(e);
-        });
-    });
+		setInterval(() => {
+			if (!imapConnected) return;
 
+			io.emit("refresh");
+		}, 5000);
+
+		io.on("messageReceived", (e) => {
+			inbox.update((i) => [...i, e]);
+			console.log(e);
+		});
+	});
 </script>
 
 <main class="main_container">
-    <nav class="navbar_container">
-        <div style="display: flex;">
-            <div style="height: 20px; margin-top: auto; margin-bottom: auto; margin-right: 7px;">
-                <IoMdMail />
-            </div>
-            <h1>{inboxDetails.email ? inboxDetails.email : "loading.."}</h1>
-        </div>
-        <div class="right_sidebar">
-            <div style="height: 25px;"> 
-                <IoMdSave />
-            </div>
-            <div style="height: 25px; margin-left: 10px;">
-                <IoIosLogOut />
-            </div>
-        </div>
-    </nav>
-    {#if !imapConnected}
-        <div style="width: 100%; padding: 5px 0px; background-color: #DAA06D; text-align: center;">
-            Connecting to server...
-        </div>
-    {/if}
-    <div class="inbox_container">
-        {#if inbox_.length == 0}
-            <Placeholder />
-        {:else}
-            <MailContainer />
-        {/if}
-    </div>
-    <div class="footer">
-        <p>Abuse - TOS - Privacy Policy</p>
-    </div>
+	<nav class="navbar_container">
+		<div style="display: flex;">
+			<div
+				style="height: 20px; margin-top: auto; margin-bottom: auto; margin-right: 7px;"
+			>
+				<IoMdMail />
+			</div>
+			<h1>{inboxDetails.email ? inboxDetails.email : "loading.."}</h1>
+		</div>
+		<div class="right_sidebar">
+			<div style="height: 25px;">
+				<IoMdSave />
+			</div>
+			<div style="height: 25px; margin-left: 10px;">
+				<IoIosLogOut />
+			</div>
+		</div>
+	</nav>
+
+	<StatusBar />
+
+	<div class="inbox_container">
+		{#if inbox_.length == 0}
+			<Placeholder />
+		{:else}
+			<MailContainer />
+		{/if}
+	</div>
+	<div class="footer">
+		<p>Abuse - TOS - Privacy Policy</p>
+	</div>
 </main>
