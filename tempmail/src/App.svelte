@@ -36,7 +36,7 @@
 		}, 5000);
 
 		io.on("messageReceived", (e) => {
-			inbox.update((i) => [...i, { ...e, id: Math.random() * 10000 }]);
+			inbox.update((i) => [...i, { ...e }]);
 		});
 	});
 
@@ -46,11 +46,6 @@
 
     <div class="sidebar">
         <h1>Tritan Temp Mail</h1>   
-        
-        <!-- <div class="mailbox_type_dropdown">
-            <p>Temp</p>
-        </div>
-         -->
         <div class="sidebar_links">
             <button class="sidebar_button">Inbox</button>
             <button class="sidebar_button">Permanent mailbox</button>

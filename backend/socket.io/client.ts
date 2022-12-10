@@ -26,13 +26,33 @@ class SocketClient {
         this.password = `S${randomBytes(9).toString("hex")}A2!`;
 
         this.socket.on("refresh", this.onMailRefresh.bind(this));
+        this.socket.on("disconnect", this.onDisconnect.bind(this));
 
-        this.socket.on("disconnect", this.onDisconnect.bind(this)) 
+        this.socket.on("fetchAttachment", this.fetchAttachment.bind(this));
+
         this.generateMailbox();
     }
 
+    async fetchAttachment(mailId: string, attachmentId: string) {
+        let message = await this.imap?.fetchMessageById(mailId);
+
+
+        console.log(message);
+
+        if(message == null)
+            return;
+        
+        const attachment = message.attachments.find(i => i.checksum == attachmentId);
+
+        console.log(attachment);
+
+        if(!attachment)
+            return;
+            
+        this.socket.emit(`${attachmentId}_inc`, attachment.content.toString("base64"));
+    }
+
     async generateMailbox() {
-        console.log("hi");
         const mailcow = new Mailcow(process.env.MAILCOW_API_KEY as string);
 
         const res = await mailcow.createMailbox({
