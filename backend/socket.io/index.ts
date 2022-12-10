@@ -11,11 +11,12 @@ class SocketIoServer {
 
         this.io = new Server(server, {
             cors: {
-                origin: "http://127.0.0.1:5173",
+                origin: "*",
                 methods: ["GET", "POST"],
                 credentials: true,
             },
         });
+
         this.io.on("connection", this.connection.bind(this));
     }
 

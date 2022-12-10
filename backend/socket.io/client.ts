@@ -32,6 +32,7 @@ class SocketClient {
     }
 
     async generateMailbox() {
+        console.log("hi");
         const mailcow = new Mailcow(process.env.MAILCOW_API_KEY as string);
 
         const res = await mailcow.createMailbox({
@@ -41,6 +42,8 @@ class SocketClient {
             name: this.email,
             password: this.password,
         });
+
+        console.log(res);
 
         if (!res) {
             this.socket.emit("mailServerError");
@@ -63,7 +66,7 @@ class SocketClient {
     }
 
     onMailRefresh() {
-        if(this.imap)
+        if(this.imap?.imap.state == "authenticated")
             this.imap.fetchMessages();
     }
 

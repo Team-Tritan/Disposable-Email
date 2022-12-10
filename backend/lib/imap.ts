@@ -42,13 +42,14 @@ class ImapWrapper extends EventEmitter {
             user: this.username,
             password: this.password,
             host: process.env.IMAP_HOST,
-            port: parseInt(process.env.IMAP_PORT || "443"),
+            port: parseInt(process.env.IMAP_PORT || "143"),
             tls: false,
             autotls: "required",
         });
 
         this.imap.once("ready", this.ready.bind(this));
 
+        this.imap.once("error", (err: any) => {});
         this.imap.connect();
     }
 
@@ -59,8 +60,6 @@ class ImapWrapper extends EventEmitter {
     fetchMessages() {
         this.openInbox((err, box) => {
             if (err) return;
-
-            console.log(box.messages);
 
             let fetch = this.imap.seq.fetch("1:*", {
                 bodies: "",
@@ -96,9 +95,7 @@ class ImapWrapper extends EventEmitter {
                 });
             });
 
-            fetch.on("error", (e) => {
-                console.log(e);
-            })
+            fetch.on("error", (e) => {});
         });
     }
 
