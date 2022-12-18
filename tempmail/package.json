@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "socket.io-client": "^4.5.4",
-    "svelte-icons": "^2.1.0"
+    "svelte-icons": "^2.1.0",
+    "svelte-spa-router": "^3.3.0"
   }
 }

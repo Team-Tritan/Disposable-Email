@@ -36,15 +36,10 @@ class SocketClient {
     async fetchAttachment(mailId: string, attachmentId: string) {
         let message = await this.imap?.fetchMessageById(mailId);
 
-
-        console.log(message);
-
         if(message == null)
             return;
         
         const attachment = message.attachments.find(i => i.checksum == attachmentId);
-
-        console.log(attachment);
 
         if(!attachment)
             return;

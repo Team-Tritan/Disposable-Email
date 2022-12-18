@@ -1,23 +1,26 @@
-<script>
-    import { models } from "../stores/models";
-    import { inbox } from "../stores/mailbox";
-    import IoMdArrowBack from 'svelte-icons/io/IoMdArrowBack.svelte'
-	import IoMdMail from "svelte-icons/io/IoMdMail.svelte";
+<script lang="ts">
+	import { mailbox } from "../stores/mailbox";
 	import { io } from "../webSocketConnection";
-	import { onMount } from "svelte";
+	import IoMdArrowBack from "svelte-icons/io/IoMdArrowBack.svelte";
+	import IoMdMail from "svelte-icons/io/IoMdMail.svelte";
+	import TopLoader from "../TopLoader.svelte";
 
-    let currentMail = $inbox.find(i => i.id == $models.mailView);
-    let bodyIframe;
+	let currentMail = $mailbox.inbox.find((i) => i.id == $mailbox.currentlySelectedEmail);
+	let bodyIframe;
+	let loading = 0;
 
-    const goBack = () => {
-        models.update(e => ({ ...e, mailView: null }));
-    }
+	const goBack = () => {
+		mailbox.update((e) => ({ ...e, currentlySelectedEmail: null }));
+	};
 
+	console.log(currentMail);
 
-    const onFrameLoad = (e) => {
-        let doc = bodyIframe.contentDocument;
+	const onFrameLoad = (e) => {
+		let doc = bodyIframe.contentDocument;
 
-        doc.body.innerHTML = doc.body.innerHTML + `
+		doc.body.innerHTML =
+			doc.body.innerHTML +
+			`
         <style>
             @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
 
@@ -29,91 +32,104 @@
                 background-color: #2b2d2a;    
                 color: white;
             }
+
+            a {
+                text-decoration: underline;
+                color: lightblue;
+            }
         </style>
         `;
-    }
+	};
 
+	const fetchAttachment = (id) => {
+		loading = 20;
 
+		let socket = io();
 
-    const fetchAttachment = (id) => {
-        io.emit("fetchAttachment", currentMail.id, id);
+		socket.emit("fetchAttachment", currentMail.id, id);
 
-        console.log(bodyIframe);
+		loading = 30;
 
-        io.on(`${id}_inc`, function (e) {
+		socket.on(`${id}_inc`, function (e) {
+			loading = 100;
 
-            console.log(bodyIframe);
-            let doc = bodyIframe.contentDocument;
+			var link = document.createElement("a");
 
-            console.log("aaa");
+			link.href = `data:application/octet-stream;base64,${e}`;
+			link.download = "file";
+			link.click();
 
-            doc.body.innerHTML = doc.body.innerHTML + `
-                <img src='data:image/jpeg;base64,${e}' />
-            `;
-
-
-            io.removeListener(`${id}_inc`);
-        })
-    }
-
-
-    // onMount(() => {
-    //     io.emit("fetchAttachment", currentMail.id, currentMail.attachments[0].id);
-
-    //     io.on(`${currentMail.attachments[0].id}_inc`, (e) => {
-    //         let doc = bodyIframe.contentDocument;
-
-    //         console.log("aaa");
-
-    //         doc.body.innerHTML = doc.body.innerHTML + `
-    //             <img src='data:image/jpeg;base64,${e}' />
-    //         `;
-        
-    //     })
-    // });
+			socket.removeListener(`${id}_inc`);
+		});
+	};
 </script>
 
+<TopLoader progress={loading} />
+
 <div class="mailview_container">
-    <div>
-        <div class="flex" on:click={goBack}>
-            <div style="height: 20px; display: flex; margin-top: auto; width: fit-content; margin-bottom: auto; margin-right: 7px;" >
-                <IoMdArrowBack />
-            </div>
-            <p class="my-auto" style="margin-left: 2px;">Back</p>
-        </div>    
-    </div>
+	<div>
+		<div style="cursor: pointer;" class="flex" on:click={goBack}>
+			<div
+				style="height: 20px; display: flex; margin-top: auto; width: fit-content; margin-bottom: auto; margin-right: 7px;"
+			>
+				<IoMdArrowBack />
+			</div>
+			<p class="my-auto" style="margin-left: 2px;">Back</p>
+		</div>
+	</div>
 
-    <div class="mailview_inner">
-        <div>
-            <h1 class="email_subject">{currentMail.subject}</h1>
-        </div>
+	<div class="mailview_inner">
+		<div>
+			<h1 class="email_subject">{currentMail.subject}</h1>
+		</div>
 
-        <div class="mailview_content">
-            <div class="sender flex">
-                <div class="sender_profile my-auto">
+		<div class="mailview_content">
+			<div class="sender flex">
+				<div class="sender_profile my-auto" />
+				<div class="my-auto">
+					<h1>{currentMail.from.split("<")[0]}</h1>
+					<p class="flex">
+						<span
+							class="my-auto"
+							style="height: 18px; margin-right: 9px;"
+						>
+							<IoMdMail />
+						</span>
+						<span class="my-auto" style="font-size: 0.9rem"
+							>{currentMail.from
+								.split("<")[1]
+								.replace("<", "")
+								.replace(">", "")}</span
+						>
+					</p>
+				</div>
+			</div>
 
-                </div>
-                <div class="my-auto">
-                    <h1>{currentMail.from.split("<")[0]}</h1>
-                    <p class="flex">
-                        <span class="my-auto" style="height: 18px; margin-right: 9px;">
-                            <IoMdMail />
-                        </span>
-                        <span class="my-auto" style="font-size: 0.9rem">{currentMail.from.split("<")[1].replace("<", "").replace(">", "")}</span>
-                    </p>
-                </div>
-            </div>
+			<iframe
+				class="mail_iframe"
+				bind:this={bodyIframe}
+				on:load={onFrameLoad}
+				srcdoc={currentMail.body}
+				title="mail contnet"
+			/>
 
-            <iframe class="mail_iframe" bind:this={bodyIframe} on:load="{onFrameLoad}" srcdoc="{currentMail.body}" title="mail contnet" />
-
-            <div>
-                <p style="margin-top: 10px;">Attachments</p>
-                {#each currentMail.attachments as attachment}
-                    <div on:click={() => fetchAttachment(attachment.id)} on:keydown={() => {}} on:keydown={() => {}} style="min-width: 250px; width: fit-content; background-color: #2b2d2a; border-radius: 10px; margin-top: 5px; padding: 10px;">
-                        {attachment.name}
-                    </div>
-                {/each}
-            </div>
-        </div>
-    </div>
+			{#if currentMail.attachments.length > 0}
+				<div>
+					<p style="margin-top: 10px;">Attachments</p>
+					<div class="flex">
+						{#each currentMail.attachments as attachment}
+							<div
+								on:click={() => fetchAttachment(attachment.id)}
+								on:keydown={() => {}}
+								on:keydown={() => {}}
+								style="min-width: 250px; width: fit-content; background-color: #2b2d2a; border-radius: 10px; margin-top: 5px; padding: 10px; margin-right: 10px;"
+							>
+								{attachment.name}
+							</div>
+						{/each}
+					</div>
+				</div>
+			{/if}
+		</div>
+	</div>
 </div>

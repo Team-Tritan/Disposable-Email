@@ -1,19 +1,9 @@
 <script lang="ts">
-    import { inbox } from "../stores/mailbox";
-	import { models } from "../stores/models";
-
-    let inbox_ = [];
-
-    inbox.subscribe(e => { 
-        console.log(e);
-        inbox_ = e 
-    });
-
-    console.log(inbox_);
-
+    import { mailbox } from "../stores/mailbox";
+	
     const setCurrentMailView = (id: string) => {
         console.log(id);
-        models.update(e => ({ ...e, mailView: id }));
+        mailbox.update(e => ({ ...e, mailView: id }));
     }
 </script>
 
@@ -26,11 +16,11 @@
         </tr>
     </thead>
     <tbody>
-        {#each inbox_ as { from, subject, body, id }}
+        {#each $mailbox.inbox as { from, subject, body, id, date }}
             <tr class="mailbox_container_row" on:click="{setCurrentMailView(id)}">
                 <td style="font-weight: 600; padding-left: 10px;">{from.split(" ")[0]}</td>
                 <td class="mailbox_row_content"><p><span style="font-weight: 600;">{subject}</span> - {body}</p></td>
-                <td style="padding-left: 15px; text-align: right; padding-right: 25px;"><span>02:56 - 8/12/2022</span></td> 
+                <td style="padding-left: 15px; text-align: right; padding-right: 25px;"><span>{new Date(date).toLocaleString("en-US")}</span></td> 
             </tr>
         {/each}
     </tbody>
