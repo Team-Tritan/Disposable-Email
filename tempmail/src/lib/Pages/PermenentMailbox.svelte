@@ -2,11 +2,18 @@
 	import { onMount } from "svelte";
 	import { models } from "../stores/models";
 	import { onDestroy } from "svelte";
-	import { GeneratePerminentMailbox, mailbox } from "../stores/mailbox";
+	import {
+		FetchMailboxFromStorage,
+		GeneratePerminentMailbox,
+		mailbox,
+		SetMailbox,
+	} from "../stores/mailbox";
 	import StatusBar from "../StatusBar.svelte";
 	import TopLoader from "../TopLoader.svelte";
 	import Mailview from "../Message/Mailview.svelte";
 	import MailboxContainer from "../Mailbox/MailboxContainer.svelte";
+	import { createUrlStore } from "../stores/url";
+	import { SetConnected } from "../stores/socket";
 
 	let interval;
 	let loading = 0;
@@ -36,19 +43,52 @@
 			});
 	};
 
-    const setRefreshTimeout = () => {
-        if(interval)
-            clearInterval(interval);
+	const setRefreshTimeout = () => {
+		if (interval) clearInterval(interval);
 
-        interval = setInterval(() => {
-            refreshMailbox();
-        }, 5000);
-    }
+		interval = setInterval(() => {
+			refreshMailbox();
+		}, 5000);
+	};
 
-    $: $mailbox.email, setRefreshTimeout();
+	$: $mailbox.email, setRefreshTimeout();
 
 	onMount(() => {
-		GeneratePerminentMailbox();
+		// createUrlStore().subscribe((i) => {
+		// 	let mailboxNumber = 0;
+
+		// 	if (i.pathname.includes("/u") && i.pathname.split("/u")[1]) {
+		// 		mailboxNumber = parseInt(i.pathname.split("/u")[1]);
+		// 	}
+
+		// 	const fromStorageMailbox = FetchMailboxFromStorage(mailboxNumber);
+
+		// 	if (fromStorageMailbox) {
+		// 		SetMailbox({
+		// 			username: fromStorageMailbox.email,
+		// 			password: fromStorageMailbox.password,
+		// 			mailboxNumber: 0,
+		// 		});
+		// 	} else {
+		// 		GeneratePerminentMailbox();
+		// 	}
+		//});
+
+		const fromStorageMailbox = FetchMailboxFromStorage(0);
+
+		if (fromStorageMailbox) {
+			SetMailbox({
+				username: fromStorageMailbox.email,
+				password: fromStorageMailbox.password,
+				mailboxNumber: 0,
+			});
+
+			refreshMailbox();	
+
+			SetConnected();
+		} else {
+			GeneratePerminentMailbox();
+		}
 	});
 
 	onDestroy(() => clearInterval(interval));

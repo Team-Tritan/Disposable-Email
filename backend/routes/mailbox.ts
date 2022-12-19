@@ -50,6 +50,22 @@ Route.post("/", async (req, res) => {
 			message: "internal server error!",
 		});
 
+	//Error handle specific mailcow errors
+	if(mailcowRes[0] && mailcowRes[0].type == "danger") {
+		if(mailcowRes[0].msg.includes("object_exists")) {
+			return res.status(400).json({
+				error: true,
+				validation_field: "username",
+				message: "Username taken"
+			});
+		} else {
+			return res.status(500).json({
+				error: true,
+				message: "internal server error!",
+			});
+		}
+	}
+
 	return res.json({
 		email: `${username}@${domain}`,
 		password: password,

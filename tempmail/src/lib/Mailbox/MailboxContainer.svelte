@@ -3,7 +3,7 @@
 	
     const setCurrentMailView = (id: string) => {
         console.log(id);
-        mailbox.update(e => ({ ...e, mailView: id }));
+        mailbox.update(e => ({ ...e, currentlySelectedEmail: id }));
     }
 </script>
 

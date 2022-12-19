@@ -2,9 +2,10 @@
 	import IoMdLogIn from "svelte-icons/io/IoMdLogIn.svelte";
 	import IoMdCheckmark from "svelte-icons/io/IoMdCheckmark.svelte";
 	import { notifications } from "../stores/notifications";
-	import { fade } from 'svelte/transition';
+	import { fade } from "svelte/transition";
 	import { models } from "../stores/models";
-
+	import { mailbox, SaveAddress } from "../stores/mailbox";
+	import { clickOutside } from "../clickOutside";
 	const usernameRegex = /^([A-Za-z0-9_-]+)$/;
 
 	let loading = false;
@@ -19,16 +20,52 @@
 		password: "",
 	};
 
-	const submit = (e) => {
+	const submit = async (e) => {
 		e.preventDefault();
 		loading = true;
 
+		const result = await fetch(`http://localhost:4000/api/mailbox`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(data),
+		})
+			.then(async (res) => await res.json())
+			.catch((err) => null);
+
+		if (result.error) {
+			if (result.validation_field)
+				errors[result.validation_field] = result.message;
+
+			loading = false;
+			return;
+		}
+
 		notifications.update((e) => [
 			...e,
-			{ value: `Switched account to: ${data.username}`, timeout: 2000, icon: IoMdCheckmark },
+			{
+				value: `Switched account to: ${data.username}`,
+				timeout: 2000,
+				icon: IoMdCheckmark,
+			},
 		]);
 
-		models.update(() => ({ currentModel: null }))
+		models.update(() => ({ currentModel: null }));
+
+		mailbox.update((e) => ({
+			...e,
+			email: result.email,
+			password: result.password,
+		}));
+
+		SaveAddress({
+			encryptAccount: false,
+			username: result.email,
+			password: result.password,
+		});
+
+		loading = false;
 	};
 
 	$: data.username,
@@ -42,7 +79,16 @@
 			: (errors.password = "");
 </script>
 
-<div in:fade out:fade={{ duration: 100 }} class="modal_inner sign_up_model">
+<div
+	use:clickOutside
+	on:click_outside={() =>
+		models.update((i) => ({
+			currentModel: null,
+		}))}
+	in:fade={{ duration: 150 }}
+	out:fade={{ duration: 100 }}
+	class="modal_inner sign_up_model"
+>
 	<div class="icon mx-auto login_icon">
 		<IoMdLogIn />
 	</div>
@@ -72,8 +118,9 @@
 			<input
 				disabled={loading}
 				bind:value={data.password}
-				placeholder="Username"
+				placeholder="Password"
 				class="form_input"
+				type="password"
 			/>
 			<p style="margin-top: 2px; font-weight: 500; color: #df5a5a;">
 				{errors.password ? errors.password : ""}

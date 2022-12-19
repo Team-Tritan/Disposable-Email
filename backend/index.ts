@@ -7,6 +7,7 @@ import MailboxRoutes from './routes/mailbox';
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
 app.use("/api/mailbox", MailboxRoutes);
 
