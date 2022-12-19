@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { models } from "../stores/models";
+	import { models } from "../stores/models";
+    import { fade } from 'svelte/transition';
 </script>
 
-<div class="modal_background">
-    {#if $models.currentModel}
-        <svelte:component this={$models.currentModel} />
-    {/if}
-</div>
+{#if $models.currentModel}
+	<div out:fade={{ duration: 100 }} class="modal_background">
+		<svelte:component this={$models.currentModel} />
+	</div>
+{/if}

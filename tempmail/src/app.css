@@ -20,7 +20,7 @@
 
 * {
 	box-sizing: border-box;
-	font-family: "IBM Plex Mono";
+	font-family: "IBM Plex Sans";
 }
 
 body {
@@ -32,7 +32,7 @@ body {
 	flex-direction: column;
 	height: 100vh;
 	width: 100vw;
-    overflow-y: hidden;
+	overflow-y: hidden;
 }
 
 .main_container {
@@ -137,11 +137,11 @@ tbody tr td {
 }
 
 .inbox_container {
-    position: relative;
+	position: relative;
 	display: flex;
 	height: 100%;
 	width: 100%;
-    overflow-y: scroll;
+	overflow-y: scroll;
 }
 
 .status_bar {
@@ -273,7 +273,7 @@ tbody tr td {
 	height: 3px;
 	top: 0px;
 	left: 0px;
-    /* transition: all 0.3s; */
+	/* transition: all 0.3s; */
 }
 
 .modal_background {
@@ -295,14 +295,104 @@ tbody tr td {
 }
 
 .sign_up_model {
-	width: 500px;
+	width: 540px;
+	height: auto;
 	text-align: center;
 	display: flex;
+	flex-direction: column;
 }
 
 .mx-auto {
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.create_tagline {
+	margin-top: 5px;
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: rgb(189, 188, 188);
+}
+
+.icon {
+	height: 25px;
+	width: 25px;
+}
+
+.login_icon {
+	height: 55px;
+	width: 55px;
+	background-color: rgb(39, 151, 90);
+	border-radius: 50px;
+	padding: 10px;
+}
+
+.form_input {
+	width: 100%;
+	margin-top: 10px;
+	border-radius: 7px;
+	border: none;
+	padding: 10px;
+	font-size: 1rem;
+	background-color: #373837;
+	border: solid 1px #595a59;
+	transition: all 0.2s;
+	margin: 0;
+}
+
+.form_input:focus {
+	background-color: #4d4d4d;
+	outline: none;
+}
+
+.input_container {
+	text-align: left;
+}
+
+.input_container p {
+	margin: 0;
+	font-size: 0.9rem;
+	margin-bottom: 3px;
+	font-weight: 600;
+}
+
+.input_container:nth-child(n + 1) {
+	margin-bottom: 10px;
+}
+
+.big_button {
+	width: 100%;
+	padding: 10px;
+	margin-top: 15px;
+	font-size: 1rem;
+	border: none;
+	border-radius: 10px;
+	background-color: #27975a;
+	cursor: pointer;
+}
+
+.error {
+	text: #df5a5a;
+}
+
+.darken_bg {
+	filter: brightness(0.85);
+}
+
+.notification_container {
+	position: absolute;
+	left: 0;
+	top: 20px;
+	transform: translate(-50%, 0px);
+	left: 50%;
+	z-index: 300;
+	box-shadow: rgba(30, 30, 34, 0.2) 0px 7px 29px 0px;
+}
+
+.notification {
+	padding: 15px 30px;
+	background-color: #282928;
+	border-radius: 50px;
 }
 
 @keyframes fadeDownStatusBar {
