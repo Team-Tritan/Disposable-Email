@@ -4,14 +4,64 @@
 
 
 :root {
+
+	/* 
+			--primary-bg: #ffffff;
+	--topbar-bg: rgb(217, 220, 252);
+	
+	--dropdown-bg: white;
+	--dropdown-button-hover: gray;
+
+	--sidebar-bg: rgb(217, 220, 252);
+	--secondary-bg: rgb(217, 220, 252);
+
+	--modal-tint: rgba(61, 61, 61, 0.384);
+	--modal-bg: rgb(233, 233, 233);
+
+	--border-primary: #3a463e;
+	--loading-bar-bg: rgb(250, 34, 250);
+
+	--primary-text: rgb(0, 0, 0);
+	--secondary-text: rgb(53, 53, 53);
+
+	--input-bg: rgb(218, 218, 218);
+	--input-focused-bg: rgb(138, 137, 137);
+	--input-border: rgb(179, 176, 176);
+
+	--button-primary: rgb(123, 145, 219);
+	*/
+	--primary-bg: #1c1d25;
+	--secondary-bg: rgb(217, 220, 252);
+	
+	--topbar-bg: #1c1d25;
+	--sidebar-bg: #1c1d25;
+	
+	--dropdown-bg: white;
+	--dropdown-button-hover: gray;
+
+	--modal-tint: rgba(61, 61, 61, 0.384);
+	--modal-bg: rgb(233, 233, 233);
+
+	--border-primary: #524f5e;
+	--loading-bar-bg: rgb(250, 34, 250);
+
+	--primary-text: white;
+	--secondary-text: rgb(53, 53, 53);
+
+	--input-bg: rgb(218, 218, 218);
+	--input-focused-bg: rgb(138, 137, 137);
+	--input-border: rgb(179, 176, 176);
+
+	--button-primary: rgb(123, 145, 219);
+
 	/* font-family: Inter, Avenir, Helvetica, Arial, sans-serif; */
 	font-size: 16px;
 	line-height: 24px;
 	font-weight: 400;
 
 	color-scheme: light dark;
-	color: rgba(255, 255, 255, 0.87);
-	background-color: #0c0e0c;
+	color: var(--primary-text);
+	background-color: var(--primary-bg);
 
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
@@ -61,8 +111,8 @@ h6 {
 .navbar_container {
 	width: 100%;
 	padding: 18px 22px;
-	border-bottom: 1px solid #3a463e;
-	background-color: #0c0e0c;
+	border-bottom: 1px solid var(--border-primary);
+	background-color: var(--topbar-bg);
 	z-index: 20;
 	position: relative;
 	display: flex;
@@ -204,8 +254,8 @@ tbody tr td {
 	padding: 25px;
 	border-radius: 8px;
 	overflow-y: scroll;
-	background-color: #131412;
-	border: 1px solid #3a463e;
+	background-color: var(--secondary-bg);
+	border: 1px solid var(--border-primary);
 }
 
 .sender h1 {
@@ -241,9 +291,10 @@ tbody tr td {
 	padding: 20px;
 	max-width: 280px;
 	width: 280px;
-	border-right: 1px solid #3a463e;
+	border-right: 1px solid var(--border-primary);
 	display: flex;
 	flex-direction: column;
+	background-color: var(--sidebar-bg);
 }
 
 .sidebar_links {
@@ -256,6 +307,7 @@ tbody tr td {
 	padding: 10px 3px;
 	border: 0;
 	font-size: 0.98rem;
+	color: var(--primary-text);
 	font-weight: 600;
 	border-radius: 8px;
 	text-align: left;
@@ -264,13 +316,13 @@ tbody tr td {
 
 .mailbox_type_dropdown {
 	padding: 10px 5px;
-	border-bottom: 1px solid #3a463e;
+	border-bottom: 1px solid var(--border-primary);
 }
 
 .loading_bar {
 	position: absolute;
 	width: 0px;
-	background-color: #14e01ec9;
+	background-color: var(--loading-bar-bg);
 	z-index: 100;
 	height: 3px;
 	top: 0px;
@@ -282,7 +334,7 @@ tbody tr td {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	background-color: rgba(11, 12, 11, 0.486);
+	background-color: var(--modal-tint);
 	z-index: 100;
 	display: flex;
 }
@@ -292,7 +344,7 @@ tbody tr td {
 	margin: auto;
 	width: 300px;
 	height: 300px;
-	background-color: #262726;
+	background-color: var(--modal-bg);
 	border-radius: 9px;
 }
 
@@ -313,7 +365,7 @@ tbody tr td {
 	margin-top: 5px;
 	font-size: 0.9rem;
 	font-weight: 600;
-	color: rgb(189, 188, 188);
+	color: var(--secondary-text);
 }
 
 .icon {
@@ -324,7 +376,7 @@ tbody tr td {
 .login_icon {
 	height: 55px;
 	width: 55px;
-	background-color: rgb(39, 151, 90);
+	background-color: var(--button-primary);
 	border-radius: 50px;
 	padding: 10px;
 }
@@ -336,14 +388,14 @@ tbody tr td {
 	border: none;
 	padding: 10px;
 	font-size: 1rem;
-	background-color: #373837;
-	border: solid 1px #595a59;
+	background-color: var(--input-bg);
+	border: solid 1px var(--input-border);
 	transition: all 0.2s;
 	margin: 0;
 }
 
 .form_input:focus {
-	background-color: #4d4d4d;
+	background-color: var(--input-focused-bg);
 	outline: none;
 }
 
@@ -369,7 +421,7 @@ tbody tr td {
 	font-size: 1rem;
 	border: none;
 	border-radius: 10px;
-	background-color: #27975a;
+	background-color: var(--button-primary);
 	cursor: pointer;
 }
 
@@ -411,8 +463,8 @@ tbody tr td {
 	width: 250px; 
 	height: auto;
 	border-radius: 9px;
-	background-color: #1a1b1a;
-	border: solid 1px #414241;
+	background-color: var(--dropdown-bg);
+	border: solid 1px var(--border-primary);
 	top: calc(100% + 5px);
 	right: calc(100% - 30px);
 }
@@ -422,11 +474,11 @@ tbody tr td {
 }
 
 .user_information .welcome {
-	color: rgb(168, 168, 168);
+	color: var(--secondary-text);
 }
 
 .avatar_dropdown .dropdown_options {
-	border-top: solid 1px #414241;
+	border-top: solid 1px var(--border-primary);
 	width: 100%;
 }
 
@@ -445,7 +497,7 @@ tbody tr td {
 }
 
 .dropdown_options ul li:hover {
-	background-color: #414241;
+	background-color: var(--dropdown-button-hover);
 }
 
 .account_switcher {
@@ -468,7 +520,7 @@ tbody tr td {
 
 
 .account_switcher ul li:hover {
-	background-color: #414241;
+	background-color: var(--dropdown-button-hover);
 }
 
 .account_switcher .avatar {
