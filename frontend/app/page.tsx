@@ -19,7 +19,7 @@ const TempMail = () => {
   const [error, setError] = useState<string | null>(null);
 
   const createTemporaryEmail = async () => {
-    setLoading(true);
+    setCreating(true);
     const randomUsername = generateRandomCredentials();
     const randomPassword = generateRandomCredentials();
 
@@ -43,7 +43,7 @@ const TempMail = () => {
     setPassword(data.password);
     localStorage.setItem("tritan_tempmail_user", data.email);
     localStorage.setItem("tritan_tempmail_pw", data.password);
-    setLoading(false);
+    setCreating(false);
   };
 
   useEffect(() => {
@@ -140,7 +140,7 @@ const TempMail = () => {
             )}
 
             {creating && (
-              <div className="bg-indigo-600 w-full text-white text-center py-2">
+              <div className="bg-green-800 w-full text-white text-center py-2">
                 Creating inbox...
               </div>
             )}
@@ -174,6 +174,15 @@ const TempMail = () => {
                     <div className="flex h-full mt-8">
                       <div className="animate-pulse">
                         <div className="h-6 w-96 bg-white opacity-50 rounded mb-2"></div>
+                        <div className="h-4 w-3/4 bg-white opacity-50 rounded mb-1"></div>
+                        <div className="h-4 w-full bg-white opacity-50 rounded mb-1"></div>
+                        <div className="h-4 w-1/2 bg-white opacity-50 rounded"></div>
+                      </div>
+                    </div>
+
+                    <div className="flex h-full mt-8">
+                      <div className="animate-pulse">
+                        <div className="h-6 w-40 bg-white opacity-50 rounded mb-2"></div>
                         <div className="h-4 w-3/4 bg-white opacity-50 rounded mb-1"></div>
                         <div className="h-4 w-full bg-white opacity-50 rounded mb-1"></div>
                         <div className="h-4 w-1/2 bg-white opacity-50 rounded"></div>
