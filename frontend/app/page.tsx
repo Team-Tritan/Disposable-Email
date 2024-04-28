@@ -167,7 +167,7 @@ const TempMail = () => {
               </div>
 
               <div className="overflow-y-auto h-96">
-                {loading && (
+                {/* {loading && (
                   <div>
                     <div className="flex h-full mt-4">
                       <div className="animate-pulse">
@@ -195,7 +195,7 @@ const TempMail = () => {
                       </div>
                     </div>
                   </div>
-                )}
+                )} */}
 
                 {mailboxData && mailboxData.messages.length === 0 && (
                   <div className="flex items-center justify-center h-full">
