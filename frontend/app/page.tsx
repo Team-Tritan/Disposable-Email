@@ -148,11 +148,11 @@ const TempMail = () => {
               </div>
             )}
 
-            {loading && (
+            {/* {loading && (
               <div className="bg-indigo-600 w-full text-white text-center py-2">
                 Looking for new emails...
               </div>
-            )}
+            )} */}
 
             <div className="p-6">
               <div className="flex justify-between items-center pb-4 border-b border-zinc-800">
