@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { IMessage, IMailboxData } from "../schemas/mailData";
+import { EnvelopeIcon } from "@heroicons/react/20/solid";
+import Link from "next/link";
 
 const generateRandomCredentials = () => {
   return Math.random().toString(36).substring(16);
@@ -100,25 +102,37 @@ const TempMail = () => {
   };
 
   return (
-    <div className="bg-gray-200 font-sans h-screen w-full mx-0">
+    <div className="bg-[#1c1d25] font-sans h-screen w-full mx-0">
       <div className="flex h-full">
-        <div className="w-64 bg-[#18161a] text-white flex flex-col justify-between">
-          <div className="bg-[#0d0c0e] p-4 rounded-xl">
-            <div className="text-lg font-semibold mb-1 mt-1 text-center text-white">
-              Temporary Mail
+        <div className="w-64 bg-[#1c1d25] text-white flex flex-col justify-between border border-zinc-800">
+          <div className="bg-[#1c1d25] p-4 rounded-xl">
+            <div className="text-lg font-semibold mb-1 mt-1 pb-4 text-center text-white border-b border-zinc-800">
+              Tritan Temporary Mail
+            </div>
+          </div>
+
+          <div className="mt-auto">
+            <div className="text-xs text-gray-300 underline mb-2 px-2">
+              <Link href="https://tritan.gg/legal">TOS - Privacy Policy</Link>
+            </div>
+            <div className="text-xs text-gray-300 underline mb-2 px-2">
+              <Link href="https://tritan.gg/contact/new-request?type=abuse_report">
+                Report Abuse
+              </Link>
             </div>
           </div>
           <div>
             <button
               onClick={deleteMailbox}
-              className="text-white w-full py-3 px-6 text-sm font-semibold flex items-center justify-center bg-[#0e0d0f] border border-zinc-800 rounded-lg"
+              className="text-white w-full py-3 px-6 text-sm font-semibold flex items-center justify-center bg-[#1a1a22] border border-zinc-800 rounded-lg"
             >
               Destroy Inbox
             </button>
           </div>
         </div>
+
         <div className="flex-1 flex">
-          <div className="w-1/2 bg-white">
+          <div className="w-1/2 bg-[#1c1d25]">
             {error && (
               <div className="bg-red-600 text-white text-center py-2">
                 {error}
@@ -126,29 +140,51 @@ const TempMail = () => {
             )}
 
             {creating && (
-              <div className="bg-indigo-600 text-white text-center py-2">
+              <div className="bg-indigo-600 w-full text-white text-center py-2">
                 Creating inbox...
               </div>
             )}
 
             {loading && (
-              <div className="bg-indigo-600 text-white text-center py-2">
+              <div className="bg-indigo-600 w-full text-white text-center py-2">
                 Fetching messages...
               </div>
             )}
 
             <div className="p-6">
-              <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-semibold text-gray-700">Inbox</h2>
-                <h2 className="text-xl font-semibold text-gray-500">{email}</h2>
+              <div className="flex justify-between items-center pb-4 border-b border-zinc-800">
+                <h2 className="text-md font-semibold text-white">Inbox</h2>
+                <div className="flex items-center">
+                  <EnvelopeIcon className="h-5 mr-2" />
+                  <h2 className="text-md font-semibold text-white">{email}</h2>
+                </div>
               </div>
 
               <div className="overflow-y-auto h-96">
-                {loading && <p>Loading...</p>}
+                {loading && (
+                  <div>
+                    <div className="flex h-full mt-4">
+                      <div className="animate-pulse">
+                        <div className="h-6 w-[650px] bg-white opacity-50 rounded mb-2"></div>
+                        <div className="h-4 w-3/4 bg-white opacity-50 rounded mb-1"></div>
+                        <div className="h-4 w-full bg-white opacity-50 rounded mb-1"></div>
+                        <div className="h-4 w-1/2 bg-white opacity-50 rounded"></div>
+                      </div>
+                    </div>
+                    <div className="flex h-full mt-8">
+                      <div className="animate-pulse">
+                        <div className="h-6 w-96 bg-white opacity-50 rounded mb-2"></div>
+                        <div className="h-4 w-3/4 bg-white opacity-50 rounded mb-1"></div>
+                        <div className="h-4 w-full bg-white opacity-50 rounded mb-1"></div>
+                        <div className="h-4 w-1/2 bg-white opacity-50 rounded"></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {mailboxData && mailboxData.messages.length === 0 && (
                   <div className="flex items-center justify-center h-full">
-                    <p className="text-black text-center">No messages found.</p>
+                    <p className="text-white text-center">No messages found.</p>
                   </div>
                 )}
 
@@ -156,17 +192,17 @@ const TempMail = () => {
                   mailboxData.messages.map((message: IMessage) => (
                     <div
                       key={message.id}
-                      className="flex items-start py-4 border-b cursor-pointer"
+                      className="flex items-start py-4 border-b border-zinc-800 cursor-pointer"
                       onClick={() => setSelectedMessage(message)}
                     >
                       <div className="flex-1">
                         <p className="text-xs font-semibold text-gray-500">
                           {message.date}
                         </p>
-                        <h3 className="text-lg font-semibold text-gray-700">
+                        <h3 className="text-lg font-semibold text-white">
                           {message.from}
                         </h3>
-                        <p className="text-sm font-semibold text-gray-600">
+                        <p className="text-sm font-semibold text-white">
                           {message.subject}
                         </p>
                       </div>
@@ -177,17 +213,17 @@ const TempMail = () => {
           </div>
 
           {selectedMessage ? (
-            <div className="w-1/2 bg-gray-200 p-6 overflow-auto">
+            <div className="w-1/2 bg-[#1c1d25] p-6 overflow-auto border border-zinc-800">
               <p className="text-xs font-semibold text-gray-500">
                 {selectedMessage.date}
               </p>
-              <h3 className="text-lg font-semibold text-gray-700">
+              <h3 className="text-lg font-semibold text-white">
                 {selectedMessage.from}
               </h3>
-              <h3 className="text-black text-lg mb-2">
+              <h3 className="text-white text-lg mb-2">
                 {selectedMessage.subject}
               </h3>
-              <p className="text-black mt-8">{selectedMessage.body}</p>
+              <p className="text-white mt-8">{selectedMessage.body}</p>
               <button
                 className="flex items-center py-2 px-4 text-sm font-semibold bg-gray-700 hover:bg-gray-600 rounded mt-8"
                 onClick={clearEmailViewer}
@@ -196,8 +232,8 @@ const TempMail = () => {
               </button>
             </div>
           ) : (
-            <div className="w-1/2 bg-gray-200 p-6 overflow-auto flex items-center justify-center h-screen">
-              <p className="text-xs font-semibold text-gray-500 text-center w-full">
+            <div className="w-1/2 bg-[#1c1d25] p-6 overflow-auto flex items-center justify-center h-screen border border-zinc-800">
+              <p className="text-md font-semibold text-gray-500 text-center w-full">
                 Select a message to view
               </p>
             </div>
