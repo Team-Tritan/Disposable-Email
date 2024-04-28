@@ -34,8 +34,8 @@ const TempMail = () => {
       }),
     });
 
-    if (!response.ok) {
-      setError("Failed to create temporary email.");
+    if (response.status !== 200) {
+      return setError("Failed to create temporary email.");
     } else {
       setError(null);
     }
@@ -66,8 +66,8 @@ const TempMail = () => {
         APIBaseURL + `/api/mailbox?email=${email}&password=${password}`
       );
 
-      if (!response.ok) {
-        setError("Failed to fetch mailbox data.");
+      if (response.status !== 200) {
+        return setError("Failed to create temporary email.");
       } else {
         setError(null);
       }
@@ -92,8 +92,8 @@ const TempMail = () => {
       }
     );
 
-    if (!response.ok) {
-      setError("Failed to delete mailbox.");
+    if (response.status !== 200) {
+      return setError("Failed to create temporary email.");
     } else {
       setError(null);
     }

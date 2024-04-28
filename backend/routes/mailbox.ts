@@ -76,6 +76,7 @@ route.post("/", async (req, res) => {
   }
 
   return res.json({
+    error: false,
     email: `${username}@${config.domain}`,
     password: password,
   });
