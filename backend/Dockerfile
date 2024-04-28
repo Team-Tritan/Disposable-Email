@@ -2,9 +2,9 @@ FROM node:latest
 
 WORKDIR /app
 
-COPY . .
-
 RUN npm install -g typescript 
+
+COPY . .
 
 RUN npm install
 
