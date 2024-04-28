@@ -35,10 +35,9 @@ route.post("/", async (req, res) => {
     });
 
   const mailcow = new Mailcow(config.mailcowAPIKey);
-  const domain = "tritan.gg";
 
   const mailcowRes = await mailcow.createMailbox({
-    domain: domain,
+    domain: config.domain,
     name: username,
     password: password,
     quota: "40",
@@ -77,7 +76,7 @@ route.post("/", async (req, res) => {
   }
 
   return res.json({
-    email: `${username}@${domain}`,
+    email: `${username}@${config.domain}`,
     password: password,
   });
 });

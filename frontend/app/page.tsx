@@ -61,6 +61,7 @@ const TempMail = () => {
 
   useEffect(() => {
     const fetchMailboxData = async () => {
+      setLoading(true);
       const response = await fetch(
         APIBaseURL + `/api/mailbox?email=${email}&password=${password}`
       );
@@ -136,7 +137,7 @@ const TempMail = () => {
         <div className="flex-1 flex">
           <div className="w-1/2 bg-[#1c1d25]">
             {error && (
-              <div className="bg-red-600 text-white text-center py-2">
+              <div className="bg-red-600 w-full text-white text-center py-2">
                 {error}
               </div>
             )}
@@ -149,7 +150,7 @@ const TempMail = () => {
 
             {loading && (
               <div className="bg-indigo-600 w-full text-white text-center py-2">
-                Fetching messages...
+                Looking for new emails...
               </div>
             )}
 
