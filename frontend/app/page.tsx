@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { IMessage, IMailboxData } from "../schemas/mailData";
 import { EnvelopeIcon } from "@heroicons/react/20/solid";
+import { LineWave } from "react-loader-spinner";
 import Link from "next/link";
 
 let APIBaseURL = "https://temp-mail-api.tritan.gg";
@@ -61,7 +62,6 @@ const TempMail = () => {
 
   useEffect(() => {
     const fetchMailboxData = async () => {
-      setLoading(true);
       const response = await fetch(
         APIBaseURL + `/api/mailbox?email=${email}&password=${password}`
       );
@@ -151,12 +151,6 @@ const TempMail = () => {
               </div>
             )}
 
-            {/* {loading && (
-              <div className="bg-indigo-600 w-full text-white text-center py-2">
-                Looking for new emails...
-              </div>
-            )} */}
-
             <div className="p-6">
               <div className="flex justify-between items-center pb-4 border-b border-zinc-800">
                 <h2 className="text-md font-semibold text-white">Inbox</h2>
@@ -167,44 +161,46 @@ const TempMail = () => {
               </div>
 
               <div className="overflow-y-auto h-96">
-                {/* {loading && (
+                {loading && (
                   <div>
-                    <div className="flex h-full mt-4">
-                      <div className="animate-pulse">
-                        <div className="h-6 w-[650px] bg-white opacity-50 rounded mb-2"></div>
-                        <div className="h-4 w-3/4 bg-white opacity-50 rounded mb-1"></div>
-                        <div className="h-4 w-full bg-white opacity-50 rounded mb-1"></div>
-                        <div className="h-4 w-1/2 bg-white opacity-50 rounded"></div>
-                      </div>
+                    <div className="flex items-center justify-center">
+                      <LineWave
+                        visible={true}
+                        height="100"
+                        width="100"
+                        color="white"
+                        ariaLabel="line-wave-loading"
+                      />
                     </div>
-                    <div className="flex h-full mt-8">
-                      <div className="animate-pulse">
-                        <div className="h-6 w-96 bg-white opacity-50 rounded mb-2"></div>
-                        <div className="h-4 w-3/4 bg-white opacity-50 rounded mb-1"></div>
-                        <div className="h-4 w-full bg-white opacity-50 rounded mb-1"></div>
-                        <div className="h-4 w-1/2 bg-white opacity-50 rounded"></div>
-                      </div>
-                    </div>
-
-                    <div className="flex h-full mt-8">
-                      <div className="animate-pulse">
-                        <div className="h-6 w-40 bg-white opacity-50 rounded mb-2"></div>
-                        <div className="h-4 w-3/4 bg-white opacity-50 rounded mb-1"></div>
-                        <div className="h-4 w-full bg-white opacity-50 rounded mb-1"></div>
-                        <div className="h-4 w-1/2 bg-white opacity-50 rounded"></div>
-                      </div>
+                    <div className="flex items-center justify-center">
+                      <p className="text-white text-center">
+                        Establishing real-time connection to the server.
+                      </p>
                     </div>
                   </div>
-                )} */}
+                )}
 
                 {mailboxData && mailboxData.messages.length === 0 && (
-                  <div className="flex items-center justify-center h-full">
-                    <p className="text-white text-center">No messages found.</p>
+                  <div>
+                    <div className="flex items-center justify-center">
+                      <LineWave
+                        visible={true}
+                        height="100"
+                        width="100"
+                        color="white"
+                        ariaLabel="line-wave-loading"
+                      />
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <p className="text-white text-center">
+                        Waiting for emails to arrive.
+                      </p>
+                    </div>
                   </div>
                 )}
 
                 {mailboxData &&
-                  mailboxData.messages.map((message: IMessage) => (
+                  mailboxData.messages.map((message: any) => (
                     <div
                       key={message.id}
                       className="flex items-start py-4 border-b border-zinc-800 cursor-pointer"
