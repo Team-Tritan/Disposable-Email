@@ -201,7 +201,7 @@ const TempMail = () => {
                   </div>
                 )}
 
-                 {/** Email list */}
+                {/** Email list */}
                 {mailboxData &&
                   mailboxData.messages.map((message: any) => (
                     <div
@@ -241,9 +241,9 @@ const TempMail = () => {
               <p className="text-white mt-8">{selectedMessage.body}</p>
               <button
                 className="flex items-center py-2 px-4 text-sm font-semibold bg-gray-700 hover:bg-gray-600 rounded mt-8"
-                onClick={clearEmailViewer}
+                onClick={deleteMailbox}
               >
-                Close
+                Delete Message
               </button>
             </div>
           ) : (
