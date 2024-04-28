@@ -1,5 +1,10 @@
 {
   "name": "backend",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon index.ts",
+    "build": "tsc -b"
+  },
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
