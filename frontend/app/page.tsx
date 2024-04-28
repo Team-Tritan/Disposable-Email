@@ -67,6 +67,8 @@ const TempMail = () => {
       );
 
       if (response.status !== 200) {
+        localStorage.removeItem("tritan_tempmail_user");
+        localStorage.removeItem("tritan_tempmail_pw");
         return setError("Failed to create temporary email.");
       } else {
         setError(null);
