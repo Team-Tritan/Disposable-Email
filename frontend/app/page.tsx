@@ -109,6 +109,7 @@ const TempMail = () => {
 
   return (
     <div className="bg-[#1c1d25] font-sans h-screen w-full mx-0">
+      {/** Sidebar */}
       <div className="flex h-full">
         <div className="w-64 bg-[#1c1d25] text-white flex flex-col justify-between border border-zinc-800">
           <div className="bg-[#1c1d25] p-4 rounded-xl">
@@ -137,6 +138,7 @@ const TempMail = () => {
           </div>
         </div>
 
+        {/** Main content */}
         <div className="flex-1 flex">
           <div className="w-1/2 bg-[#1c1d25]">
             {error && (
@@ -199,6 +201,7 @@ const TempMail = () => {
                   </div>
                 )}
 
+                 {/** Email list */}
                 {mailboxData &&
                   mailboxData.messages.map((message: any) => (
                     <div
@@ -223,6 +226,7 @@ const TempMail = () => {
             </div>
           </div>
 
+          {/** Email Viewer */}
           {selectedMessage ? (
             <div className="w-1/2 bg-[#1c1d25] p-6 overflow-auto border border-zinc-800">
               <p className="text-xs font-semibold text-gray-500">
