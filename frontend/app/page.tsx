@@ -36,7 +36,7 @@ const TempMail = () => {
     });
 
     if (response.status !== 200) {
-      return setError("Failed to create temporary email.");
+      return setError("Failed to create temporary email, please try again.");
     } else {
       setError(null);
     }
@@ -69,7 +69,7 @@ const TempMail = () => {
       if (response.status !== 200) {
         localStorage.removeItem("tritan_tempmail_user");
         localStorage.removeItem("tritan_tempmail_pw");
-        return setError("Failed to create temporary email.");
+        return setError("Authentication failed for prior email, please reload the page.");
       } else {
         setError(null);
       }
