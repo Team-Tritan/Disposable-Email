@@ -3,4 +3,5 @@ export const config = {
   mailcowBaseURL: "https://mail.as393577.net",
   imapServer: "mail.as393577.net",
   imapPort: "143",
+  port: 4000,
 };

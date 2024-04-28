@@ -5,6 +5,8 @@ import { IMessage, IMailboxData } from "../schemas/mailData";
 import { EnvelopeIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 
+let APIBaseURL = "https://temp-mail-api.tritan.gg";
+
 const generateRandomCredentials = () => {
   return Math.random().toString(36).substring(16);
 };
@@ -23,7 +25,7 @@ const TempMail = () => {
     const randomUsername = generateRandomCredentials();
     const randomPassword = generateRandomCredentials();
 
-    const response = await fetch("http://localhost:4000/api/mailbox", {
+    const response = await fetch(APIBaseURL + "/api/mailbox", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -60,7 +62,7 @@ const TempMail = () => {
   useEffect(() => {
     const fetchMailboxData = async () => {
       const response = await fetch(
-        `http://localhost:4000/api/mailbox?email=${email}&password=${password}`
+        APIBaseURL + `/api/mailbox?email=${email}&password=${password}`
       );
 
       if (!response.ok) {
@@ -83,7 +85,7 @@ const TempMail = () => {
 
   const deleteMailbox = async () => {
     let response = await fetch(
-      `http://localhost:4000/api/mailbox/delete?email=${email}&password=${password}`,
+      APIBaseURL + `/api/mailbox/delete?email=${email}&password=${password}`,
       {
         method: "POST",
       }
