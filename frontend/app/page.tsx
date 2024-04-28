@@ -58,7 +58,7 @@ const TempMail = () => {
       setEmail(storedEmail);
       setPassword(storedPassword);
     }
-  }, []);
+  }, [email, password]);
 
   useEffect(() => {
     const fetchMailboxData = async () => {
@@ -80,7 +80,7 @@ const TempMail = () => {
 
     const interval = setInterval(() => fetchMailboxData(), 10000);
     return () => clearInterval(interval);
-  }, [email, password]);
+  });
 
   const clearEmailViewer = () => {
     setSelectedMessage(null);

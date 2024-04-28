@@ -135,6 +135,7 @@ class ImapWrapper extends EventEmitter {
 
         fetch.on("error", (err) => reject(err));
       });
+      console.log(this.messages);
     });
   }
 
