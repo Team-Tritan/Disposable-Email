@@ -1,23 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { IMessage, IMailboxData } from "@schemas/MailData";
 import { EnvelopeIcon } from "@heroicons/react/20/solid";
 import { LineWave } from "react-loader-spinner";
 import { toast } from "react-toastify";
-import useCreateTemporaryEmail from "@hooks/createTemporaryMailbox";
-import useFetchMailboxData from "@hooks/fetchMailboxData";
-import useDeleteMailbox from "@hooks/deleteMailbox";
-import copyToClipboard from "@hooks/copyToClipboard";
-import { IMessage, IMailboxData } from "@schemas/MailData";
 
 let APIBaseURL = "https://temp-mail-api.tritan.gg";
+//let APIBaseURL = "http://localhost:4000";
 
 const generateRandomCredentials = () => {
   return Math.random().toString(36).substring(16);
 };
 
-export default function TempMail() {
+const TempMail = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mailboxData, setMailboxData] = useState<IMailboxData | null>(null);
@@ -25,24 +22,39 @@ export default function TempMail() {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
 
-  const createTemporaryEmail = useCreateTemporaryEmail({
-    setCreating,
-    generateRandomCredentials,
-    APIBaseURL,
-    setEmail,
-    setPassword,
-    toast,
-  });
+  const createTemporaryEmail = async () => {
+    setCreating(true);
+    const randomUsername = generateRandomCredentials();
+    const randomPassword = generateRandomCredentials();
+
+    const response = await fetch(APIBaseURL + "/api/mailbox", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: randomUsername,
+        password: randomPassword,
+      }),
+    });
+
+    if (response.status !== 200) {
+      toast.error("Failed to create temporary email, please try again.");
+    }
+
+    const data = await response.json();
+
+    setEmail(data.email);
+    setPassword(data.password);
+
+    localStorage.setItem("tritan_tempmail_user", data.email);
+    localStorage.setItem("tritan_tempmail_pw", data.password);
+
+    setCreating(false);
+    return toast.success("New mailbox created successfully!");
+  };
 
   useEffect(() => {
-    const storedEmail =
-      typeof window !== "undefined"
-        ? localStorage.getItem("tritan_tempmail_user")
-        : null;
-    const storedPassword =
-      typeof window !== "undefined"
-        ? localStorage.getItem("tritan_tempmail_pw")
-        : null;
+    const storedEmail = localStorage.getItem("tritan_tempmail_user");
+    const storedPassword = localStorage.getItem("tritan_tempmail_pw");
 
     (async () => {
       if (!storedEmail || !storedPassword) await createTemporaryEmail();
@@ -51,24 +63,65 @@ export default function TempMail() {
         setPassword(storedPassword);
       }
     })();
-  }, [email, password, createTemporaryEmail]);
+  }, [email, password]);
 
-  useFetchMailboxData({
-    APIBaseURL,
-    email,
-    password,
-    setMailboxData,
-    setLoading,
+  useEffect(() => {
+    const fetchMailboxData = async () => {
+      const response = await fetch(
+        APIBaseURL + `/api/mailbox?email=${email}&password=${password}`
+      );
+
+      if (response.status !== 200 || !response.ok) {
+        localStorage.removeItem("tritan_tempmail_user");
+        localStorage.removeItem("tritan_tempmail_pw");
+        toast.error("Unable to fetch mailbox data, please reload the page.");
+      }
+
+      setLoading(false);
+      setMailboxData(await response.json());
+    };
+
+    const interval = setInterval(() => fetchMailboxData(), 10000);
+    return () => clearInterval(interval);
   });
 
-  const deleteMailbox = useDeleteMailbox({
-    APIBaseURL,
-    email,
-    password,
-    setMailboxData,
-    setSelectedMessage,
-    createTemporaryEmail: () => createTemporaryEmail(),
-  });
+  // const clearEmailViewer = () => {
+  //   setSelectedMessage(null);
+  // };
+
+  const deleteMailbox = async () => {
+    let response = await fetch(
+      APIBaseURL + `/api/mailbox/delete?email=${email}&password=${password}`,
+      {
+        method: "POST",
+      }
+    );
+
+    if (response.status !== 200) {
+      return toast.error("Failed to create temporary email.");
+    }
+
+    setMailboxData(null);
+    setSelectedMessage(null);
+
+    localStorage.removeItem("tritan_tempmail_user");
+    localStorage.removeItem("tritan_tempmail_pw");
+
+    createTemporaryEmail();
+    toast.info("Mailbox destroyed successfully!");
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success("Email copied to clipboard!");
+
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+      return toast.success("Failed to copy email to clipboard.");
+    }
+  };
 
   return (
     <div className="bg-[#1c1d25] font-sans h-screen w-full mx-0">
@@ -83,7 +136,7 @@ export default function TempMail() {
 
           <div className="p-4">
             <button
-              onClick={createTemporaryEmail}
+              onClick={deleteMailbox}
               className="text-white w-full py-3 px-6 text-sm font-semibold flex items-center justify-center bg-[#2b2b38] border border-zinc-800 rounded-lg"
               disabled={creating}
             >
@@ -223,4 +276,6 @@ export default function TempMail() {
       </div>
     </div>
   );
-}
+};
+
+export default TempMail;
