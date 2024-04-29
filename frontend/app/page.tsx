@@ -7,8 +7,8 @@ import { EnvelopeIcon } from "@heroicons/react/20/solid";
 import { LineWave } from "react-loader-spinner";
 import { toast } from "react-toastify";
 
-//let APIBaseURL = "https://temp-mail-api.tritan.gg";
-let APIBaseURL = "http://localhost:4000";
+let APIBaseURL = "https://temp-mail-api.tritan.gg";
+//let APIBaseURL = "http://localhost:4000";
 
 const generateRandomCredentials = () => {
   return Math.random().toString(36).substring(16);
