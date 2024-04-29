@@ -7,7 +7,14 @@ import { config } from "./config";
 
 const app = express();
 
-app.use(cors());
+const originList = ["http://localhost:3000", "https://temp-mail.tritan.gg"];
+
+app.use(
+  cors({
+    origin: originList,
+  })
+);
+
 app.use(express.json());
 
 app.use("/api/mailbox", MailboxRoutes);
