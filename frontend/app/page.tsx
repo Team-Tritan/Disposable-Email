@@ -37,7 +37,7 @@ const TempMail = () => {
     });
 
     if (response.status !== 200) {
-      toast.error("Failed to create temporary email, please try again.");
+      return toast.error("Failed to create temporary email, please try again.");
     }
 
     const data = await response.json();
@@ -74,7 +74,9 @@ const TempMail = () => {
       if (response.status !== 200 || !response.ok) {
         localStorage.removeItem("tritan_tempmail_user");
         localStorage.removeItem("tritan_tempmail_pw");
-        toast.error("Unable to fetch mailbox data, please reload the page.");
+        return toast.error(
+          "Unable to fetch mailbox data, please reload the page."
+        );
       }
 
       setLoading(false);
@@ -84,10 +86,6 @@ const TempMail = () => {
     const interval = setInterval(() => fetchMailboxData(), 10000);
     return () => clearInterval(interval);
   });
-
-  // const clearEmailViewer = () => {
-  //   setSelectedMessage(null);
-  // };
 
   const deleteMailbox = async () => {
     let response = await fetch(
