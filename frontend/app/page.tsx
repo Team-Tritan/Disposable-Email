@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { IMessage, IMailboxData } from "../schemas/mailData";
-import { EnvelopeIcon } from "@heroicons/react/20/solid";
+import { EnvelopeIcon, ClipboardIcon } from "@heroicons/react/20/solid";
 import { LineWave } from "react-loader-spinner";
 import Link from "next/link";
+import { set } from "zod";
 
 let APIBaseURL = "https://temp-mail-api.tritan.gg";
 
@@ -20,6 +21,7 @@ const TempMail = () => {
   const [loading, setLoading] = useState(true);
   const [selectedMessage, setSelectedMessage] = useState<IMessage | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [alert, setAlert] = useState<string | null>(null);
 
   const createTemporaryEmail = async () => {
     setCreating(true);
@@ -69,7 +71,9 @@ const TempMail = () => {
       if (response.status !== 200) {
         localStorage.removeItem("tritan_tempmail_user");
         localStorage.removeItem("tritan_tempmail_pw");
-        return setError("Authentication failed for prior email, please reload the page.");
+        return setError(
+          "Authentication failed for prior email, please reload the page."
+        );
       } else {
         setError(null);
       }
@@ -105,6 +109,19 @@ const TempMail = () => {
     localStorage.removeItem("tritan_tempmail_user");
     localStorage.removeItem("tritan_tempmail_pw");
     createTemporaryEmail();
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setAlert("Email copied to clipboard!");
+
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      setAlert(null);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+      setAlert("Failed to copy email to clipboard.");
+    }
   };
 
   return (
@@ -147,6 +164,12 @@ const TempMail = () => {
               </div>
             )}
 
+            {alert && (
+              <div className="bg-green-800 w-full text-white text-center py-2">
+                {alert}
+              </div>
+            )}
+
             {creating && (
               <div className="bg-green-800 w-full text-white text-center py-2">
                 Creating inbox...
@@ -158,7 +181,13 @@ const TempMail = () => {
                 <h2 className="text-md font-semibold text-white">Inbox</h2>
                 <div className="flex items-center">
                   <EnvelopeIcon className="h-5 mr-2" />
-                  <h2 className="text-md font-semibold text-white">{email}</h2>
+                  <h2
+                    className="text-md font-semibold text-white transition-colors hover:text-purple-400"
+                    onClick={() => copyToClipboard(email)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {email}
+                  </h2>
                 </div>
               </div>
 
