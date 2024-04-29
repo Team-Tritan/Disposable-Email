@@ -74,7 +74,7 @@ class ImapWrapper extends EventEmitter {
 
           fetch.on("message", (msg, seqno) => {
             msg.on("body", (stream, info) => {
-              simpleParser(stream, (err, mail) => {
+              simpleParser(stream.read().toString(), (err, mail) => {
                 if (err) return;
                 resolve(mail);
               });
@@ -106,7 +106,7 @@ class ImapWrapper extends EventEmitter {
         fetch.on("message", (msg, seqno) => {
           msg.on("body", (stream, info) => {
             messageCount++;
-            simpleParser(stream, (err, mail) => {
+            simpleParser(stream.read().toString(), (err, mail) => {
               const mail_: Mail = {
                 id: mail.messageId || "",
                 attachments:
@@ -120,7 +120,7 @@ class ImapWrapper extends EventEmitter {
                 date: mail.date || new Date(),
                 from: mail.from?.text || "",
                 subject: mail.subject || "",
-                //@ts-ignore
+                // @ts-ignore
                 to: mail.to.text || "",
               };
 
@@ -149,7 +149,7 @@ class ImapWrapper extends EventEmitter {
 
       fetch.on("message", (msg, seqno) => {
         msg.on("body", (stream, info) => {
-          simpleParser(stream, (err, mail) => {
+          simpleParser(stream.read().toString(), (err, mail) => {
             if (err) return;
 
             const uniqueHash = createHash("md5")
