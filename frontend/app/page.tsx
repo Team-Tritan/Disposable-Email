@@ -165,7 +165,7 @@ const TempMail = () => {
             )}
 
             {alert && (
-              <div className="bg-green-800 w-full text-white text-center py-2">
+              <div className="bg-gray-600 w-full text-white text-center py-2">
                 {alert}
               </div>
             )}

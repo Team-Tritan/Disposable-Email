@@ -4,6 +4,7 @@ import ImapWrapper, { Mail } from "../lib/imap";
 import { randomBytes } from "crypto";
 import randomWords from "random-words";
 import Mailcow from "../lib/mailcow";
+import { config } from "../config";
 
 class SocketClient {
   email: string;
@@ -54,7 +55,7 @@ class SocketClient {
     const mailcow = new Mailcow(process.env.MAILCOW_API_KEY as string);
 
     const res = await mailcow.createMailbox({
-      domain: "suckmail.co",
+      domain: config.domain,
       forcePwUpdate: "0",
       quota: "0",
       name: this.email,
