@@ -142,6 +142,7 @@ const TempMail = () => {
             <button
               onClick={deleteMailbox}
               className="text-white w-full py-3 px-6 text-sm font-semibold flex items-center justify-center bg-[#1a1a22] border border-zinc-800 rounded-lg"
+              disabled={creating}
             >
               Destroy Inbox
             </button>
