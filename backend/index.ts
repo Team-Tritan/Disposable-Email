@@ -7,11 +7,9 @@ import { config } from "./config";
 
 const app = express();
 
-const originList = ["http://localhost:3000", "https://temp-mail.tritan.gg"];
-
 app.use(
   cors({
-    origin: originList,
+    origin: "*",
   })
 );
 
