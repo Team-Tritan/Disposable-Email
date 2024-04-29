@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { IMessage, IMailboxData } from "../schemas/mailData";
-import { EnvelopeIcon, ClipboardIcon } from "@heroicons/react/20/solid";
+import { EnvelopeIcon } from "@heroicons/react/20/solid";
 import { LineWave } from "react-loader-spinner";
 import Link from "next/link";
 
