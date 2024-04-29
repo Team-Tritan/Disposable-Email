@@ -15,7 +15,7 @@ const usernameRegex = /[A-Za-z-_0-9]/gm;
 route.post("/", async (req, res) => {
   const username = req.body.username
     ? req.body.username
-    : `${randomWords(1)}${randomBytes(5).toString("hex")}`;
+    : `${randomWords(1)}.${randomBytes(5).toString("hex")}`;
   const password = req.body.password
     ? req.body.password
     : `${randomBytes(22).toString("hex")}`;
