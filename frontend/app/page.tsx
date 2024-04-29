@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { IMessage, IMailboxData } from "../schemas/mailData";
 import { EnvelopeIcon } from "@heroicons/react/20/solid";
 import { LineWave } from "react-loader-spinner";
-import Link from "next/link";
+import { toast } from "react-toastify";
 
-let APIBaseURL = "https://temp-mail-api.tritan.gg";
-//let APIBaseURL = "http://localhost:4000";
+//let APIBaseURL = "https://temp-mail-api.tritan.gg";
+let APIBaseURL = "http://localhost:4000";
 
 const generateRandomCredentials = () => {
   return Math.random().toString(36).substring(16);
@@ -17,11 +18,9 @@ const TempMail = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mailboxData, setMailboxData] = useState<IMailboxData | null>(null);
-  const [creating, setCreating] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [selectedMessage, setSelectedMessage] = useState<IMessage | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [alert, setAlert] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
 
   const createTemporaryEmail = async () => {
     setCreating(true);
@@ -38,9 +37,7 @@ const TempMail = () => {
     });
 
     if (response.status !== 200) {
-      return setError("Failed to create temporary email, please try again.");
-    } else {
-      setError(null);
+      toast.error("Failed to create temporary email, please try again.");
     }
 
     const data = await response.json();
@@ -49,6 +46,7 @@ const TempMail = () => {
     localStorage.setItem("tritan_tempmail_user", data.email);
     localStorage.setItem("tritan_tempmail_pw", data.password);
     setCreating(false);
+    toast.success("New mailbox created successfully!");
   };
 
   useEffect(() => {
@@ -71,15 +69,11 @@ const TempMail = () => {
       if (response.status !== 200 || !response.ok) {
         localStorage.removeItem("tritan_tempmail_user");
         localStorage.removeItem("tritan_tempmail_pw");
-        return setError(
-          "Authentication failed for prior email, please reload the page."
-        );
-      } else {
-        setError(null);
+        toast.error("Unable to fetch mailbox data, please reload the page.");
       }
 
-      setMailboxData(await response.json());
       setLoading(false);
+      setMailboxData(await response.json());
     };
 
     const interval = setInterval(() => fetchMailboxData(), 10000);
@@ -99,10 +93,7 @@ const TempMail = () => {
     );
 
     if (response.status !== 200) {
-      setCreating(false);
-      return setError("Failed to create temporary email.");
-    } else {
-      setError(null);
+      return toast.error("Failed to create temporary email.");
     }
 
     setMailboxData(null);
@@ -110,18 +101,19 @@ const TempMail = () => {
     localStorage.removeItem("tritan_tempmail_user");
     localStorage.removeItem("tritan_tempmail_pw");
     createTemporaryEmail();
+
+    toast.info("Mailbox destroyed successfully!");
   };
 
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      setAlert("Email copied to clipboard!");
+      toast.success("Email copied to clipboard!");
 
       await new Promise((resolve) => setTimeout(resolve, 3000));
-      setAlert(null);
     } catch (err) {
       console.error("Failed to copy text: ", err);
-      setAlert("Failed to copy email to clipboard.");
+      return toast.success("Failed to copy email to clipboard.");
     }
   };
 
@@ -159,24 +151,6 @@ const TempMail = () => {
         {/** Main content */}
         <div className="flex-1 flex">
           <div className="w-1/2 bg-[#1c1d25]">
-            {error && (
-              <div className="bg-red-600 w-full text-white text-center py-2">
-                {error}
-              </div>
-            )}
-
-            {alert && (
-              <div className="bg-gray-600 w-full text-white text-center py-2">
-                {alert}
-              </div>
-            )}
-
-            {creating && (
-              <div className="bg-green-800 w-full text-white text-center py-2">
-                Creating inbox...
-              </div>
-            )}
-
             <div className="p-6">
               <div className="flex justify-between items-center pb-4 border-b border-zinc-800">
                 <h2 className="text-md font-semibold text-white">Inbox</h2>
