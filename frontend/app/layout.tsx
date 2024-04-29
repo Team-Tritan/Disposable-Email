@@ -19,6 +19,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="icon"
+          type="image/png"
+          href="https://s3.tritan.gg/main/tritan-bot/logo.webp"
+        />
+      </head>
       <ToastContainer
         position="top-right"
         autoClose={3000}
