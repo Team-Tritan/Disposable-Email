@@ -46,18 +46,20 @@ const TempMail = () => {
     localStorage.setItem("tritan_tempmail_user", data.email);
     localStorage.setItem("tritan_tempmail_pw", data.password);
     setCreating(false);
-    toast.success("New mailbox created successfully!");
+    return toast.success("New mailbox created successfully!");
   };
 
   useEffect(() => {
     const storedEmail = localStorage.getItem("tritan_tempmail_user");
     const storedPassword = localStorage.getItem("tritan_tempmail_pw");
 
-    if (!storedEmail || !storedPassword) createTemporaryEmail();
-    else {
-      setEmail(storedEmail);
-      setPassword(storedPassword);
-    }
+    (async () => {
+      if (!storedEmail || !storedPassword) await createTemporaryEmail();
+      else {
+        setEmail(storedEmail);
+        setPassword(storedPassword);
+      }
+    })();
   }, [email, password]);
 
   useEffect(() => {
