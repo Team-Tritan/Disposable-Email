@@ -68,7 +68,7 @@ const TempMail = () => {
         APIBaseURL + `/api/mailbox?email=${email}&password=${password}`
       );
 
-      if (response.status !== 200) {
+      if (response.status !== 200 || !response.ok) {
         localStorage.removeItem("tritan_tempmail_user");
         localStorage.removeItem("tritan_tempmail_pw");
         return setError(
