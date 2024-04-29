@@ -126,28 +126,32 @@ const TempMail = () => {
         <div className="w-64 bg-[#1c1d25] text-white flex flex-col justify-between border border-zinc-800">
           <div className="bg-[#1c1d25] p-4 rounded-xl">
             <div className="text-lg font-semibold mb-1 mt-1 pb-4 text-center text-white border-b border-zinc-800">
-              Tritan Temporary Mail
+              Tritan Disposable Mail
             </div>
+          </div>
+
+          <div className="p-4">
+            <button
+              onClick={deleteMailbox}
+              className="text-white w-full py-3 px-6 text-sm font-semibold flex items-center justify-center bg-[#2b2b38] border border-zinc-800 rounded-lg"
+              disabled={creating}
+            >
+              New Inbox
+            </button>
           </div>
 
           <div className="mt-auto">
             <div className="text-xs text-gray-300 underline mb-2 px-2">
-              <Link href="https://tritan.gg/legal">TOS - Privacy Policy</Link>
+              <Link href="https://tritan.gg/legal">TOS & Privacy Policy</Link>
             </div>
             <div className="text-xs text-gray-300 underline mb-2 px-2">
               <Link href="https://tritan.gg/contact/new-request?type=abuse_report">
                 Report Abuse
               </Link>
             </div>
-          </div>
-          <div>
-            <button
-              onClick={deleteMailbox}
-              className="text-white w-full py-3 px-6 text-sm font-semibold flex items-center justify-center bg-[#1a1a22] border border-zinc-800 rounded-lg"
-              disabled={creating}
-            >
-              Destroy Inbox
-            </button>
+            <div className="text-xs text-gray-300 mt-6 mb-2 px-2">
+              Created by Tritan Internet LLC
+            </div>
           </div>
         </div>
 
@@ -245,9 +249,13 @@ const TempMail = () => {
               <h3 className="text-white text-lg mb-2">
                 {selectedMessage.subject}
               </h3>
-              <p className="text-white mt-8">{selectedMessage.body}</p>
+              <div className="bg-black rounded-lg p-4 mt-8 w-[100%]">
+                <code className="text-white">
+                  <p className="mt-2">{selectedMessage.body}</p>
+                </code>
+              </div>
               <button
-                className="flex items-center py-2 px-4 text-sm font-semibold bg-gray-700 hover:bg-gray-600 rounded mt-8"
+                className="flex items-center py-2 px-4 text-sm font-semibold bg-[#2b2b38] rounded mt-8"
                 onClick={deleteMailbox}
               >
                 Delete Message
