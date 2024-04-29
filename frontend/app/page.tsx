@@ -5,12 +5,11 @@ import Link from "next/link";
 import { EnvelopeIcon } from "@heroicons/react/20/solid";
 import { LineWave } from "react-loader-spinner";
 import { toast } from "react-toastify";
-
-import { IMessage, IMailboxData } from "@schemas/MailData";
 import useCreateTemporaryEmail from "@hooks/createTemporaryMailbox";
 import useFetchMailboxData from "@hooks/fetchMailboxData";
 import useDeleteMailbox from "@hooks/deleteMailbox";
 import copyToClipboard from "@hooks/copyToClipboard";
+import { IMessage, IMailboxData } from "@schemas/MailData";
 
 let APIBaseURL = "https://temp-mail-api.tritan.gg";
 
@@ -18,7 +17,7 @@ const generateRandomCredentials = () => {
   return Math.random().toString(36).substring(16);
 };
 
-const TempMail = () => {
+export default function TempMail() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mailboxData, setMailboxData] = useState<IMailboxData | null>(null);
@@ -84,7 +83,7 @@ const TempMail = () => {
 
           <div className="p-4">
             <button
-              onClick={deleteMailbox}
+              onClick={createTemporaryEmail}
               className="text-white w-full py-3 px-6 text-sm font-semibold flex items-center justify-center bg-[#2b2b38] border border-zinc-800 rounded-lg"
               disabled={creating}
             >
@@ -224,6 +223,4 @@ const TempMail = () => {
       </div>
     </div>
   );
-};
-
-export default TempMail;
+}
