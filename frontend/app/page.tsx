@@ -99,6 +99,7 @@ const TempMail = () => {
     );
 
     if (response.status !== 200) {
+      setCreating(false);
       return setError("Failed to create temporary email.");
     } else {
       setError(null);
