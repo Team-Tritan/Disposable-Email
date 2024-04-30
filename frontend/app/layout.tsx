@@ -25,6 +25,11 @@ export default function RootLayout({
           type="image/png"
           href="https://s3.tritan.gg/main/tritan-bot/logo.webp"
         />
+        <script
+          defer
+          data-domain="temp-mail.tritan.gg"
+          src="https://analytics.tritan.gg/js/script.js"
+        ></script>
       </head>
       <ToastContainer
         position="top-right"
