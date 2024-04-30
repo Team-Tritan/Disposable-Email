@@ -112,7 +112,7 @@ const TempMail = () => {
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      toast.success("Email copied to clipboard!");
+      toast.info("Email copied to clipboard!");
 
       await new Promise((resolve) => setTimeout(resolve, 3000));
     } catch (err) {
