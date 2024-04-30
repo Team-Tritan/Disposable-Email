@@ -35,16 +35,16 @@ const MessageViewer: React.FC<Props> = ({
               <p className="mt-2">{selectedMessage.body}</p>
             </code>
           </div>
-          <div className="flex items-center justify-left mt-8 space-x-3">
+          <div className="flex items-center justify-left mt-2 space-x-3">
             <button
-              className="flex items-center py-2 px-4 text-sm font-semibold bg-[#1d1d25] hover:bg-[#24242e] mt-8 text-white h-8 rounded-xl w-auto"
+              className="flex items-center py-2 px-3 text-sm font-semibold bg-[#1d1d25] hover:bg-[#24242e] mt-8 text-white h-8 rounded-xl w-auto"
               onClick={closeMessageViewer}
             >
-              <XMarkIcon className="h-5 mr-2" /> Close Email
+              <XMarkIcon className="h-6 mr-2" /> Close Email
             </button>
 
             <button
-              className="flex items-center py-2 px-4 text-sm font-semibold bg-[#1d1d25] hover:bg-[#24242e] mt-8 text-white h-8 rounded-xl w-auto"
+              className="flex items-center py-2 px-3 text-sm font-semibold bg-[#1d1d25] hover:bg-[#24242e] mt-8 text-white h-8 rounded-xl w-auto"
               onClick={deleteMailbox}
             >
               <TrashIcon className="h-5 mr-2" /> Delete Inbox
