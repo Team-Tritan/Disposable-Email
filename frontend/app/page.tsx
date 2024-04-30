@@ -122,11 +122,11 @@ const TempMail = () => {
   };
 
   return (
-    <div className="bg-[#1c1d25] font-sans h-screen w-full mx-0">
+    <div className="bg-[#0d0c0e] font-sans h-screen w-full mx-0">
       {/** Sidebar */}
       <div className="flex h-full">
-        <div className="w-64 bg-[#1c1d25] text-white flex flex-col justify-between border border-zinc-800">
-          <div className="bg-[#1c1d25] p-4 rounded-xl">
+        <div className="w-64 bg-[#0d0c0e] text-white flex flex-col justify-between border border-zinc-800">
+          <div className="bg-[#0d0c0e] p-4 rounded-xl">
             <div className="text-lg font-semibold mb-1 mt-1 pb-4 text-center text-white border-b border-zinc-800">
               Tritan Disposable Mail
             </div>
@@ -135,7 +135,7 @@ const TempMail = () => {
           <div className="p-4">
             <button
               onClick={deleteMailbox}
-              className="text-white w-full py-3 px-6 text-sm font-semibold flex items-center justify-center bg-[#2b2b38] border border-zinc-800 rounded-lg"
+              className="text-white w-full py-3 px-6 text-sm font-semibold flex items-center justify-center bg-[#18181f] border border-zinc-800 rounded-lg"
               disabled={creating}
             >
               New Inbox
@@ -159,7 +159,7 @@ const TempMail = () => {
 
         {/** Main content */}
         <div className="flex-1 flex">
-          <div className="w-1/2 bg-[#1c1d25]">
+          <div className="w-1/2 bg-[#0d0c0e]">
             <div className="p-6">
               <div className="flex justify-between items-center pb-4 border-b border-zinc-800">
                 <h2 className="text-md font-semibold text-white">Inbox</h2>
@@ -241,7 +241,7 @@ const TempMail = () => {
 
           {/** Email Viewer */}
           {selectedMessage ? (
-            <div className="w-1/2 bg-[#1c1d25] p-6 overflow-auto border border-zinc-800">
+            <div className="w-1/2 bg-[#0d0c0e] p-6 overflow-auto border border-zinc-800">
               <p className="text-xs font-semibold text-gray-500">
                 {selectedMessage.date}
               </p>
@@ -257,14 +257,14 @@ const TempMail = () => {
                 </code>
               </div>
               <button
-                className="flex items-center py-2 px-4 text-sm font-semibold bg-[#2b2b38] rounded mt-8"
+                className="flex items-center py-2 px-4 text-sm font-semibold bg-[#1d1d25] rounded mt-8"
                 onClick={deleteMailbox}
               >
                 Delete Message
               </button>
             </div>
           ) : (
-            <div className="w-1/2 bg-[#1c1d25] p-6 overflow-auto flex items-center justify-center h-screen border border-zinc-800">
+            <div className="w-1/2 bg-[#0d0c0e] p-6 overflow-auto flex items-center justify-center h-screen border border-zinc-800">
               <p className="text-md font-semibold text-gray-500 text-center w-full">
                 Select a message to view
               </p>
