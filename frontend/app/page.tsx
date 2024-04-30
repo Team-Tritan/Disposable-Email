@@ -8,9 +8,6 @@ import Sidebar from "@components/Sidebar";
 import EmailList from "@components/EmailList";
 import MessageViewer from "@components/MessageViewer";
 
-//let APIBaseURL = "https://temp-mail-api.tritan.gg";
-let APIBaseURL = "http://localhost:4000";
-
 const generateRandomCredentials = () => {
   return Math.random().toString(36).substring(16);
 };
@@ -28,7 +25,7 @@ export default function TempMail() {
     const randomUsername = generateRandomCredentials();
     const randomPassword = generateRandomCredentials();
 
-    const response = await fetch(APIBaseURL + "/api/mailbox/create", {
+    const response = await fetch("/api/mailbox/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -69,7 +66,7 @@ export default function TempMail() {
   useEffect(() => {
     const fetchMailboxData = async () => {
       const response = await fetch(
-        APIBaseURL + `/api/mailbox/fetch?email=${email}&password=${password}`
+        `/api/mailbox/fetch?email=${email}&password=${password}`
       );
 
       if (response.status !== 200 || !response.ok) {
@@ -90,7 +87,7 @@ export default function TempMail() {
 
   const deleteMailbox = async () => {
     let response = await fetch(
-      APIBaseURL + `/api/mailbox/delete?email=${email}&password=${password}`,
+      `/api/mailbox/delete?email=${email}&password=${password}`,
       {
         method: "POST",
       }
@@ -124,7 +121,6 @@ export default function TempMail() {
 
   const closeMessageViewer = () => {
     setSelectedMessage(null);
-    console.log(selectedMessage);
   };
 
   return (
