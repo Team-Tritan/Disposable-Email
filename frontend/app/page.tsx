@@ -8,7 +8,8 @@ import Sidebar from "@components/Sidebar";
 import EmailList from "@components/EmailList";
 import MessageViewer from "@components/MessageViewer";
 
-let APIBaseURL = "https://temp-mail-api.tritan.gg";
+//let APIBaseURL = "https://temp-mail-api.tritan.gg";
+let APIBaseURL = "http://localhost:4000";
 
 const generateRandomCredentials = () => {
   return Math.random().toString(36).substring(16);
@@ -121,6 +122,11 @@ export default function TempMail() {
     }
   };
 
+  const closeMessageViewer = () => {
+    setSelectedMessage(null);
+    console.log(selectedMessage);
+  };
+
   return (
     <div className="bg-[#0d0c0e] font-sans h-screen w-full mx-0">
       <div className="flex h-full">
@@ -140,7 +146,7 @@ export default function TempMail() {
           </div>
           <MessageViewer
             selectedMessage={selectedMessage}
-            deleteMailbox={deleteMailbox}
+            closeMessageViewer={closeMessageViewer}
           />
         </div>
       </div>

@@ -9,10 +9,13 @@ interface Message {
 
 interface Props {
   selectedMessage: Message | null;
-  deleteMailbox: () => void;
+  closeMessageViewer: () => void;
 }
 
-const MessageViewer: React.FC<Props> = ({ selectedMessage, deleteMailbox }) => {
+const MessageViewer: React.FC<Props> = ({
+  selectedMessage,
+  closeMessageViewer,
+}) => {
   return (
     <div className="w-1/2 bg-[#0d0c0e] p-6 overflow-auto border border-zinc-800">
       {selectedMessage ? (
@@ -31,9 +34,9 @@ const MessageViewer: React.FC<Props> = ({ selectedMessage, deleteMailbox }) => {
           </div>
           <button
             className="flex items-center py-2 px-4 text-sm font-semibold bg-[#1d1d25] hover:bg-[#24242e] rounded mt-8"
-            onClick={deleteMailbox}
+            onClick={closeMessageViewer}
           >
-            Delete Message
+            Close Message
           </button>
         </>
       ) : (

@@ -94,46 +94,63 @@ class ImapWrapper extends EventEmitter {
       this.openInbox((err, box) => {
         if (err) return reject(err);
 
-        let messages: Mail[] = [];
+        let messagePromises: Promise<Mail>[] = [];
 
-        //We have a message count because 'fetch.on('end')' dosent wait for the code inside msg.body to run.
-        let messageCount = 0;
+        this.imap.seq.search(["ALL"], (err, uids) => {
+          if (err) throw err;
 
-        let fetch = this.imap.seq.fetch("1:*", {
-          bodies: "",
-        });
-
-        fetch.on("message", (msg, seqno) => {
-          msg.on("body", (stream, info) => {
-            messageCount++;
-            simpleParser(stream, (err, mail) => {
-              const mail_: Mail = {
-                id: mail.messageId || "",
-                attachments:
-                  mail?.attachments?.map((i) => ({
-                    type: i.type,
-                    name: i.filename || "file",
-                    checksum: i.checksum,
-                    id: i.checksum,
-                  })) || [],
-                body: mail.textAsHtml || "",
-                date: mail.date || new Date(),
-                from: mail.from?.text || "",
-                subject: mail.subject || "",
-                // @ts-ignore
-                to: mail.to.text || "",
-              };
-
-              messages.push(mail_);
-
-              if (messages.length == messageCount) resolve(messages);
-            });
+          let sortedUids = uids.sort((a, b) => b - a);
+          let fetch = this.imap.seq.fetch(sortedUids, {
+            bodies: "",
           });
 
-          msg.on("error", (err: any) => reject(err));
-        });
+          fetch.on("message", (msg, seqno) => {
+            let messageData = "";
+            msg.on("body", (stream, info) => {
+              stream.on("data", (chunk) => {
+                messageData += chunk.toString("utf8");
+              });
+              stream.once("end", () => {
+                let messagePromise = new Promise<Mail>((resolve, reject) => {
+                  simpleParser(messageData, (err, mail) => {
+                    if (err) return reject(err);
 
-        fetch.on("error", (err) => reject(err));
+                    const mail_: Mail = {
+                      id: mail.messageId || "",
+                      attachments:
+                        mail?.attachments?.map((i) => ({
+                          type: i.type,
+                          name: i.filename || "file",
+                          checksum: i.checksum,
+                          id: i.checksum,
+                        })) || [],
+                      body: mail.textAsHtml || "",
+                      date: mail.date || new Date(),
+                      from: mail.from?.text || "",
+                      subject: mail.subject || "",
+                      // @ts-ignore
+                      to: mail.to.text || "",
+                    };
+
+                    resolve(mail_);
+                  });
+                });
+
+                messagePromises.push(messagePromise);
+              });
+            });
+
+            msg.on("error", (err: any) => reject(err));
+          });
+
+          fetch.once("end", () => {
+            Promise.all(messagePromises)
+              .then((messages) => resolve(messages))
+              .catch((err) => reject(err));
+          });
+
+          fetch.on("error", (err) => reject(err));
+        });
       });
     });
   }
