@@ -143,6 +143,7 @@ export default function TempMail() {
           <MessageViewer
             selectedMessage={selectedMessage}
             closeMessageViewer={closeMessageViewer}
+            deleteMailbox={deleteMailbox}
           />
         </div>
       </div>

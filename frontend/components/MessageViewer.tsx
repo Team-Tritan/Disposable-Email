@@ -1,4 +1,5 @@
 import React from "react";
+import { XMarkIcon, TrashIcon } from "@heroicons/react/20/solid";
 
 interface Message {
   date: string;
@@ -10,17 +11,19 @@ interface Message {
 interface Props {
   selectedMessage: Message | null;
   closeMessageViewer: () => void;
+  deleteMailbox: () => void;
 }
 
 const MessageViewer: React.FC<Props> = ({
   selectedMessage,
   closeMessageViewer,
+  deleteMailbox,
 }) => {
   return (
     <div className="w-1/2 bg-[#0d0c0e] p-6 overflow-auto border border-zinc-800">
       {selectedMessage ? (
         <>
-          <p className="text-xs font-semibold text-gray-500">
+          <p className="text-xs font-semibold text-gray-500 mb-1">
             {selectedMessage.date}
           </p>
           <h3 className="text-lg font-semibold text-white">
@@ -32,12 +35,21 @@ const MessageViewer: React.FC<Props> = ({
               <p className="mt-2">{selectedMessage.body}</p>
             </code>
           </div>
-          <button
-            className="flex items-center py-2 px-4 text-sm font-semibold bg-[#1d1d25] hover:bg-[#24242e] rounded mt-8"
-            onClick={closeMessageViewer}
-          >
-            Close Message
-          </button>
+          <div className="flex items-center justify-left mt-8 space-x-3">
+            <button
+              className="flex items-center py-2 px-4 text-sm font-semibold bg-[#1d1d25] hover:bg-[#24242e] mt-8 text-white h-8 rounded-xl w-auto"
+              onClick={closeMessageViewer}
+            >
+              <XMarkIcon className="h-5 mr-2" /> Close Email
+            </button>
+
+            <button
+              className="flex items-center py-2 px-4 text-sm font-semibold bg-[#1d1d25] hover:bg-[#24242e] mt-8 text-white h-8 rounded-xl w-auto"
+              onClick={deleteMailbox}
+            >
+              <TrashIcon className="h-5 mr-2" /> Delete Inbox
+            </button>
+          </div>
         </>
       ) : (
         <div className="flex items-center justify-center h-screen">

@@ -89,8 +89,6 @@ route.post("/create", async (req, res) => {
     forcePwUpdate: "0",
   });
 
-  console.log(mailcowRes);
-
   if (!mailcowRes)
     return res.status(500).json({
       error: true,

@@ -56,14 +56,14 @@ const EmailList: React.FC<IEmailListProps> = ({
         mailboxData.messages.map((message: any) => (
           <div
             key={message.id}
-            className="flex items-start py-4 border-b border-zinc-800 cursor-pointer"
+            className="flex items-start py-4 border-b border-zinc-800 hover:bg-[#111013] cursor-pointer"
             onClick={() => setSelectedMessage(message)}
           >
             <div className="flex-1">
-              <p className="text-xs font-semibold text-gray-500">
+              <p className="text-xs font-semibold text-gray-500 mb-2">
                 {message.date}
               </p>
-              <h3 className="text-lg font-semibold text-white">
+              <h3 className="text-lg font-semibold text-white mb-1">
                 {message.from}
               </h3>
               <p className="text-sm font-semibold text-white">
