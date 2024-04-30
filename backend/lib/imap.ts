@@ -99,57 +99,64 @@ class ImapWrapper extends EventEmitter {
         this.imap.seq.search(["ALL"], (err, uids) => {
           if (err) throw err;
 
+          if (uids.length === 0) {
+            return resolve([]);
+          }
+
           let sortedUids = uids.sort((a, b) => b - a);
-          let fetch = this.imap.seq.fetch(sortedUids, {
-            bodies: "",
-          });
 
-          fetch.on("message", (msg, seqno) => {
-            let messageData = "";
-            msg.on("body", (stream, info) => {
-              stream.on("data", (chunk) => {
-                messageData += chunk.toString("utf8");
-              });
-              stream.once("end", () => {
-                let messagePromise = new Promise<Mail>((resolve, reject) => {
-                  simpleParser(messageData, (err, mail) => {
-                    if (err) return reject(err);
-
-                    const mail_: Mail = {
-                      id: mail.messageId || "",
-                      attachments:
-                        mail?.attachments?.map((i) => ({
-                          type: i.type,
-                          name: i.filename || "file",
-                          checksum: i.checksum,
-                          id: i.checksum,
-                        })) || [],
-                      body: mail.textAsHtml || "",
-                      date: mail.date || new Date(),
-                      from: mail.from?.text || "",
-                      subject: mail.subject || "",
-                      // @ts-ignore
-                      to: mail.to.text || "",
-                    };
-
-                    resolve(mail_);
-                  });
-                });
-
-                messagePromises.push(messagePromise);
-              });
+          try {
+            let fetch = this.imap.seq.fetch(sortedUids, {
+              bodies: "",
             });
 
-            msg.on("error", (err: any) => reject(err));
-          });
+            fetch.on("message", (msg, seqno) => {
+              let messageData = "";
+              msg.on("body", (stream, info) => {
+                stream.on("data", (chunk) => {
+                  messageData += chunk.toString("utf8");
+                });
+                stream.once("end", () => {
+                  let messagePromise = new Promise<Mail>((resolve, reject) => {
+                    simpleParser(messageData, (err, mail) => {
+                      if (err) return reject(err);
 
-          fetch.once("end", () => {
-            Promise.all(messagePromises)
-              .then((messages) => resolve(messages))
-              .catch((err) => reject(err));
-          });
+                      const mail_: Mail = {
+                        id: mail.messageId || "",
+                        attachments:
+                          mail?.attachments?.map((i) => ({
+                            type: i.type,
+                            name: i.filename || "file",
+                            checksum: i.checksum,
+                            id: i.checksum,
+                          })) || [],
+                        body: mail.textAsHtml || "",
+                        date: mail.date || new Date(),
+                        from: mail.from?.text || "",
+                        subject: mail.subject || "",
+                        // @ts-ignore
+                        to: mail.to.text || "",
+                      };
 
-          fetch.on("error", (err) => reject(err));
+                      resolve(mail_);
+                    });
+                  });
+
+                  messagePromises.push(messagePromise);
+                });
+              });
+
+              msg.on("error", (err: any) => reject(err));
+            });
+
+            fetch.once("end", () => {
+              Promise.all(messagePromises)
+                .then((messages) => resolve(messages))
+                .catch((err) => reject(err));
+            });
+
+            fetch.on("error", (err) => reject(err));
+          } catch (e) {}
         });
       });
     });
