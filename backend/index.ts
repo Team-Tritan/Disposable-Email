@@ -13,9 +13,17 @@ app.use(
   })
 );
 
+app.disable("x-powered-by");
 app.use(express.json());
-
 app.use("/api/mailbox", MailboxRoutes);
+
+app.all("*", (req, res) => {
+  return res.status(404).json({
+    error: true,
+    code: 404,
+    message: "Route not found",
+  });
+});
 
 const server = app.listen(config.port, () => {
   console.log("> API started on port 4000");
