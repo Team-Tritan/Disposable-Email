@@ -27,7 +27,7 @@ export default function TempMail() {
     const randomUsername = generateRandomCredentials();
     const randomPassword = generateRandomCredentials();
 
-    const response = await fetch(APIBaseURL + "/api/mailbox", {
+    const response = await fetch(APIBaseURL + "/api/mailbox/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

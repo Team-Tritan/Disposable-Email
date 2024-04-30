@@ -9,10 +9,51 @@ const route = Router();
 const usernameRegex = /[A-Za-z-_0-9]/gm;
 
 /**
- * Makes a new mailbox
- * POST: /api/mailbox
+ * Fetches messages from mailbox
+ * GET: /api/mailbox
  */
-route.post("/", async (req, res) => {
+route.get("/", async (req, res) => {
+  let username = req.query.email as string;
+  let password = req.query.password as string;
+
+  if (!username || !password)
+    return res.status(400).json({
+      error: true,
+      message: "Email or password not provided!",
+    });
+
+  const imap = new ImapWrapper(username, password);
+
+  imap.on("ready", async (cli) => {
+    const messages = await cli
+      .fetchMessagesSync()
+      .then((res) => res)
+      .catch((err) => {
+        return null;
+      });
+
+    imap.imap.end();
+
+    if (messages == null) return res.status(200).send({ messages: [] });
+
+    return res.json({
+      messages,
+    });
+  });
+
+  imap.on("error", () => {
+    return res.status(401).json({
+      error: true,
+      message: "Unathorized!",
+    });
+  });
+});
+
+/**
+ * Makes a new mailbox
+ * POST: /api/mailbox/create
+ */
+route.post("/create", async (req, res) => {
   const username = req.body.username
     ? req.body.username
     : `${randomWords(1)}.${randomBytes(5).toString("hex")}`;
@@ -79,47 +120,6 @@ route.post("/", async (req, res) => {
     error: false,
     email: `${username}@${config.domain}`,
     password: password,
-  });
-});
-
-/**
- * Fetches messages from mailbox
- * GET: /api/mailbox
- */
-route.get("/", async (req, res) => {
-  let username = req.query.email as string;
-  let password = req.query.password as string;
-
-  if (!username || !password)
-    return res.status(400).json({
-      error: true,
-      message: "Email or password not provided!",
-    });
-
-  const imap = new ImapWrapper(username, password);
-
-  imap.on("ready", async (cli) => {
-    const messages = await cli
-      .fetchMessagesSync()
-      .then((res) => res)
-      .catch((err) => {
-        return null;
-      });
-
-    imap.imap.end();
-
-    if (messages == null) return res.status(200).send({ messages: [] });
-
-    return res.json({
-      messages,
-    });
-  });
-
-  imap.on("error", () => {
-    return res.status(401).json({
-      error: true,
-      message: "Unathorized!",
-    });
   });
 });
 
