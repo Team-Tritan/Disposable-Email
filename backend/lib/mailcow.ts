@@ -32,7 +32,6 @@ export default class Mailcow {
     password,
     forcePwUpdate,
   }: CreateMailbox) {
-    console.log(name, password);
     return await this.axios
       .post("/api/v1/add/mailbox", {
         domain,
