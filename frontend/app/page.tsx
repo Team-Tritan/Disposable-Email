@@ -68,7 +68,7 @@ export default function TempMail() {
   useEffect(() => {
     const fetchMailboxData = async () => {
       const response = await fetch(
-        APIBaseURL + `/api/mailbox?email=${email}&password=${password}`
+        APIBaseURL + `/api/mailbox/fetch?email=${email}&password=${password}`
       );
 
       if (response.status !== 200 || !response.ok) {

@@ -10,9 +10,11 @@ const usernameRegex = /[A-Za-z-_0-9]/gm;
 
 /**
  * Fetches messages from mailbox
- * GET: /api/mailbox
+ * GET: /api/mailbox/fetch
+ * @query email
+ * @query password
  */
-route.get("/", async (req, res) => {
+route.get("/fetch", async (req, res) => {
   let username = req.query.email as string;
   let password = req.query.password as string;
 
@@ -52,6 +54,8 @@ route.get("/", async (req, res) => {
 /**
  * Makes a new mailbox
  * POST: /api/mailbox/create
+ * @param username - The username of the mailbox
+ * @param password - The password of the mailbox
  */
 route.post("/create", async (req, res) => {
   const username = req.body.username
@@ -126,6 +130,8 @@ route.post("/create", async (req, res) => {
 /**
  * Deletes a mailbox
  * POST: /api/mailbox/delete
+ * @param email - The email of the mailbox
+ * @param password - The password of the mailbox
  */
 route.post("/delete", async (req, res) => {
   let username = req.query.email as string;
