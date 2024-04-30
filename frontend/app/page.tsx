@@ -125,13 +125,11 @@ const TempMail = () => {
     <div className="bg-[#0d0c0e] font-sans h-screen w-full mx-0">
       <div className="flex h-full">
         <Sidebar deleteMailbox={deleteMailbox} creating={creating} />
-
         <div className="flex-1 flex">
           <div className="w-1/2 bg-[#0d0c0e]">
             <div>
               <Topbar email={email} copyToClipboard={copyToClipboard} />
             </div>
-
             <div className="overflow-y-auto h-96 px-4">
               <EmailList
                 loading={loading}
@@ -140,7 +138,6 @@ const TempMail = () => {
               />
             </div>
           </div>
-
           <MessageViewer
             selectedMessage={selectedMessage}
             deleteMailbox={deleteMailbox}
