@@ -3,7 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { IMessage, IMailboxData } from "@schemas/MailData";
-import { EnvelopeIcon } from "@heroicons/react/20/solid";
+import {
+  EnvelopeIcon,
+  ClipboardDocumentListIcon,
+} from "@heroicons/react/20/solid";
 import { LineWave } from "react-loader-spinner";
 import { toast } from "react-toastify";
 
@@ -135,7 +138,7 @@ const TempMail = () => {
           <div className="p-4">
             <button
               onClick={deleteMailbox}
-              className="text-white w-full py-3 px-6 text-sm font-semibold flex items-center justify-center bg-[#18181f] border border-zinc-800 rounded-lg"
+              className="text-white w-full py-3 px-6 text-sm font-semibold flex items-center justify-center bg-[#18181f] hover:bg-[#1c1c24] border border-zinc-800 rounded-lg shadow-lg"
               disabled={creating}
             >
               New Inbox
@@ -162,11 +165,14 @@ const TempMail = () => {
           <div className="w-1/2 bg-[#0d0c0e]">
             <div className="p-6">
               <div className="flex justify-between items-center pb-4 border-b border-zinc-800">
-                <h2 className="text-md font-semibold text-white">Inbox</h2>
                 <div className="flex items-center">
                   <EnvelopeIcon className="h-5 mr-2" />
+                  <h2 className="text-md font-semibold text-white">Inbox</h2>
+                </div>
+                <div className="flex items-center">
+                  <ClipboardDocumentListIcon className="h-5 mr-2" />
                   <h2
-                    className="text-md font-semibold text-white transition-colors hover:text-purple-400"
+                    className="text-md font-semibold text-purple-400 hover:text-purple-200"
                     onClick={() => copyToClipboard(email)}
                     style={{ cursor: "pointer" }}
                   >
@@ -257,7 +263,7 @@ const TempMail = () => {
                 </code>
               </div>
               <button
-                className="flex items-center py-2 px-4 text-sm font-semibold bg-[#1d1d25] rounded mt-8"
+                className="flex items-center py-2 px-4 text-sm font-semibold bg-[#1d1d25] hover:bg-[#24242e] rounded mt-8"
                 onClick={deleteMailbox}
               >
                 Delete Message
