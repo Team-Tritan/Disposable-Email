@@ -25,6 +25,7 @@ export default function RootLayout({
       trackLocalhost={true}
       trackOutboundLinks={true}
       enabled={true}
+      
     >
       <html lang="en">
         <head>
