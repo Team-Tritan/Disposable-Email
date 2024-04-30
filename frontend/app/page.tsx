@@ -14,7 +14,7 @@ const generateRandomCredentials = () => {
   return Math.random().toString(36).substring(16);
 };
 
-const TempMail = () => {
+export default function TempMail() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mailboxData, setMailboxData] = useState<IMailboxData | null>(null);
@@ -146,6 +146,4 @@ const TempMail = () => {
       </div>
     </div>
   );
-};
-
-export default TempMail;
+}
