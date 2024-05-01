@@ -162,6 +162,33 @@ class ImapWrapper extends EventEmitter {
     });
   }
 
+  // maybe?
+  deleteMessage(id: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.openInbox((err, box) => {
+        if (err) return reject(err);
+
+        this.imap.seq.search([["HEADER", "MESSAGE-ID", id]], (err, uids) => {
+          if (err) return reject(err);
+
+          if (uids.length === 0) {
+            return resolve();
+          }
+
+          this.imap.seq.addFlags(uids, "\\Deleted", (err) => {
+            if (err) return reject(err);
+
+            this.imap.expunge((err) => {
+              if (err) return reject(err);
+
+              resolve();
+            });
+          });
+        });
+      });
+    });
+  }
+
   private ready() {
     this.fetchMessagesSync();
     this.emit("ready", this);
