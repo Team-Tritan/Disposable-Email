@@ -8,10 +8,6 @@ import Sidebar from "@components/Sidebar";
 import EmailList from "@components/EmailList";
 import MessageViewer from "@components/MessageViewer";
 
-const generateRandomCredentials = () => {
-  return Math.random().toString(36).substring(16);
-};
-
 export default function TempMail() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,16 +18,9 @@ export default function TempMail() {
 
   const createTemporaryEmail = async () => {
     setCreating(true);
-    const randomUsername = generateRandomCredentials();
-    const randomPassword = generateRandomCredentials();
 
-    const response = await fetch("/api/mailbox/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: randomUsername,
-        password: randomPassword,
-      }),
+    const response = await fetch("/api/mailbox", {
+      method: "PUT",
     });
 
     if (response.status !== 200) {
@@ -65,9 +54,14 @@ export default function TempMail() {
 
   useEffect(() => {
     const fetchMailboxData = async () => {
-      const response = await fetch(
-        `/api/mailbox/fetch?email=${email}&password=${password}`
-      );
+      const response = await fetch(`/api/mailbox`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth-Email": email,
+          "X-Auth-Token": password,
+        },
+      });
 
       if (response.status !== 200 || !response.ok) {
         localStorage.removeItem("tritan_tempmail_user");
@@ -86,12 +80,14 @@ export default function TempMail() {
   });
 
   const deleteMailbox = async () => {
-    let response = await fetch(
-      `/api/mailbox/delete?email=${email}&password=${password}`,
-      {
-        method: "POST",
-      }
-    );
+    let response = await fetch(`/api/mailbox`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Auth-Email": email,
+        "X-Auth-Token": password,
+      },
+    });
 
     if (response.status !== 200) {
       return toast.error("Failed to create temporary email.");

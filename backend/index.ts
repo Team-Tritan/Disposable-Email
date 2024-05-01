@@ -20,7 +20,7 @@ app.use("/api/mailbox", MailboxRoutes);
 app.all("*", (req, res) => {
   return res.status(404).json({
     error: true,
-    code: 404,
+    status: 404,
     message: "Route not found",
   });
 });

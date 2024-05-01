@@ -10,17 +10,18 @@ const usernameRegex = /[A-Za-z-_0-9]/gm;
 
 /**
  * Fetches messages from mailbox
- * GET: /api/mailbox/fetch
+ * PATCH: /api/mailbox
  * @query email
  * @query password
  */
-route.get("/fetch", async (req, res) => {
-  let username = req.query.email as string;
-  let password = req.query.password as string;
+route.patch("/", async (req, res) => {
+  let username = req.get("X-Auth-Email") as string;
+  let password = req.get("X-Auth-Token") as string;
 
   if (!username || !password)
     return res.status(400).json({
       error: true,
+      status: 400,
       message: "Email or password not provided!",
     });
 
@@ -46,18 +47,19 @@ route.get("/fetch", async (req, res) => {
   imap.on("error", () => {
     return res.status(401).json({
       error: true,
-      message: "Unathorized!",
+      status: 401,
+      message: "Unathorized",
     });
   });
 });
 
 /**
  * Makes a new mailbox
- * POST: /api/mailbox/create
+ * PUT: /api/mailbox
  * @param username - The username of the mailbox
  * @param password - The password of the mailbox
  */
-route.post("/create", async (req, res) => {
+route.put("/", async (req, res) => {
   const username = req.body.username
     ? req.body.username
     : `${randomWords(1)}.${randomBytes(5).toString("hex")}`;
@@ -68,6 +70,7 @@ route.post("/create", async (req, res) => {
   if (!usernameRegex.test(username) || username.length > 64)
     return res.status(400).json({
       error: true,
+      status: 400,
       validation_field: "username",
       message: "Username invalid!",
     });
@@ -75,6 +78,7 @@ route.post("/create", async (req, res) => {
   if (password.length > 128)
     return res.status(400).json({
       error: true,
+      status: 400,
       validation_field: "password",
       message: "Password is too long!",
     });
@@ -100,6 +104,7 @@ route.post("/create", async (req, res) => {
     if (mailcowRes[0].msg.includes("password_complexity")) {
       return res.status(400).json({
         error: true,
+        status: 400,
         validation_field: "password",
         message: "Password does not meet complexity requirements",
       });
@@ -107,19 +112,22 @@ route.post("/create", async (req, res) => {
     if (mailcowRes[0].msg.includes("object_exists")) {
       return res.status(400).json({
         error: true,
+        status: 400,
         validation_field: "username",
         message: "Username taken",
       });
     } else {
       return res.status(500).json({
         error: true,
-        message: "internal server error!",
+        status: 500,
+        message: "Internal server error!",
       });
     }
   }
 
-  return res.json({
+  return res.status(200).json({
     error: false,
+    status: 200,
     email: `${username}@${config.domain}`,
     password: password,
   });
@@ -127,17 +135,18 @@ route.post("/create", async (req, res) => {
 
 /**
  * Deletes a mailbox
- * POST: /api/mailbox/delete
+ * DELETE: /api/mailbox
  * @param email - The email of the mailbox
  * @param password - The password of the mailbox
  */
-route.post("/delete", async (req, res) => {
-  let username = req.query.email as string;
-  let password = req.query.password as string;
+route.delete("/", async (req, res) => {
+  let username = req.get("X-Auth-Email") as string;
+  let password = req.get("X-Auth-Token") as string;
 
   if (!username || !password)
     return res.status(400).json({
       error: true,
+      status: 400,
       message: "Email or password not provided!",
     });
 
@@ -148,10 +157,13 @@ route.post("/delete", async (req, res) => {
   if (!mailcowRes)
     return res.status(500).json({
       error: true,
+      status: 500,
       message: "internal server error!",
     });
 
-  return res.json({
+  return res.status(200).json({
+    error: false,
+    status: 200,
     success: true,
   });
 });
