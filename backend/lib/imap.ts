@@ -162,57 +162,8 @@ class ImapWrapper extends EventEmitter {
     });
   }
 
-  fetchMessages() {
-    this.openInbox((err, box) => {
-      if (err) return;
-
-      let fetch = this.imap.seq.fetch("1:*", {
-        bodies: "",
-      });
-
-      fetch.on("message", (msg, seqno) => {
-        msg.on("body", (stream, info) => {
-          simpleParser(stream, (err, mail) => {
-            if (err) return;
-
-            const uniqueHash = createHash("md5")
-              .update(`${mail.textAsHtml}${mail.date}${mail.subject}`)
-              .digest("hex");
-
-            if (this.messages.get(uniqueHash)) return;
-
-            const mail_: Mail = {
-              id: mail.messageId || "",
-              attachments:
-                mail?.attachments?.map((i) => ({
-                  type: i.type,
-                  name: i.filename || "file",
-                  checksum: i.checksum,
-                  id: i.checksum,
-                })) || [],
-              body: mail.textAsHtml || "",
-              date: mail.date || new Date(),
-              from: mail.from?.text || "",
-              subject: mail.subject || "",
-              //@ts-ignore
-              to: mail.to.text || "",
-            };
-
-            this.emit("messageReceived", mail_);
-
-            this.messages.set(uniqueHash, mail_);
-          });
-        });
-      });
-
-      fetch.on("error", (e) => {});
-
-      fetch.on("end", () => this.emit("finishFetch"));
-    });
-  }
-
   private ready() {
-    this.fetchMessages();
+    this.fetchMessagesSync();
     this.emit("ready", this);
   }
 }
