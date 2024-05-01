@@ -11,8 +11,6 @@ const usernameRegex = /[A-Za-z-_0-9]/gm;
 /**
  * Fetches messages from mailbox
  * PATCH: /api/mailbox
- * @query email
- * @query password
  */
 route.patch("/", async (req, res) => {
   let username = req.get("X-Auth-Email") as string;
@@ -56,8 +54,6 @@ route.patch("/", async (req, res) => {
 /**
  * Makes a new mailbox
  * PUT: /api/mailbox
- * @param username - The username of the mailbox
- * @param password - The password of the mailbox
  */
 route.put("/", async (req, res) => {
   const username = req.body.username
@@ -136,8 +132,6 @@ route.put("/", async (req, res) => {
 /**
  * Deletes a mailbox
  * DELETE: /api/mailbox
- * @param email - The email of the mailbox
- * @param password - The password of the mailbox
  */
 route.delete("/", async (req, res) => {
   let username = req.get("X-Auth-Email") as string;
