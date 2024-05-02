@@ -154,7 +154,12 @@ export default function TempMail() {
           />
 
           {showCompose && (
-            <ComposeEmail setShowCompose={setShowCompose} toast={toast} />
+            <ComposeEmail
+              setShowCompose={setShowCompose}
+              toast={toast}
+              email={email}
+              password={password}
+            />
           )}
         </div>
       </div>
