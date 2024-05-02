@@ -7,6 +7,7 @@ import Topbar from "@components/Topbar";
 import Sidebar from "@components/Sidebar";
 import EmailList from "@components/EmailList";
 import MessageViewer from "@components/MessageViewer";
+import ComposeEmail from "@components/ComposeEmail";
 
 export default function TempMail() {
   const [email, setEmail] = useState("");
@@ -15,6 +16,12 @@ export default function TempMail() {
   const [selectedMessage, setSelectedMessage] = useState<IMessage | null>(null);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+  const [showCompose, setShowCompose] = useState(false);
+  const [composeData, setComposeData] = useState({
+    to: "",
+    subject: "",
+    text: "",
+  });
 
   const createTemporaryEmail = async () => {
     setCreating(true);
@@ -122,7 +129,11 @@ export default function TempMail() {
   return (
     <div className="bg-[#0d0c0e] font-sans h-screen w-full mx-0">
       <div className="flex h-full">
-        <Sidebar deleteMailbox={deleteMailbox} creating={creating} />
+        <Sidebar
+          deleteMailbox={deleteMailbox}
+          creating={creating}
+          setShowCompose={setShowCompose}
+        />
         <div className="flex-1 flex">
           <div className="w-1/2 bg-[#0d0c0e]">
             <div>
@@ -141,6 +152,15 @@ export default function TempMail() {
             closeMessageViewer={closeMessageViewer}
             deleteMailbox={deleteMailbox}
           />
+
+          {showCompose && (
+            <ComposeEmail
+              setShowCompose={setShowCompose}
+              toast={toast}
+              email={email}
+              password={password}
+            />
+          )}
         </div>
       </div>
     </div>
