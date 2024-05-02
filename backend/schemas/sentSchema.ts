@@ -1,5 +1,13 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
-import { SentMail } from "../lib/db";
+
+interface SentMail {
+  from: string;
+  to: string;
+  subject: string;
+  text: string;
+  date?: Date;
+  ip: string;
+}
 
 interface SentMailDocument extends SentMail, Document {}
 
@@ -12,8 +20,10 @@ const SentSchema = new Schema<SentMailDocument>({
   ip: { type: String, required: true },
 });
 
-export const Sent: Model<SentMailDocument> = mongoose.model<SentMailDocument>(
+const Sent: Model<SentMailDocument> = mongoose.model<SentMailDocument>(
   "Sent",
   SentSchema,
   "Sent"
 );
+
+export { Sent, SentMail };

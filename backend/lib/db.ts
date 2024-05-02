@@ -1,15 +1,7 @@
 import mongoose from "mongoose";
 import { config } from "../config";
 import { Sent } from "../schemas/sentSchema";
-
-export interface SentMail {
-  from: string;
-  to: string;
-  subject: string;
-  text: string;
-  date?: Date;
-  ip: string;
-}
+import { Mailbox } from "../schemas/mailboxSchema";
 
 async function initDB(): Promise<void> {
   try {
@@ -31,4 +23,18 @@ async function storeSentMail(
   await sentMail.save();
 }
 
-export { initDB, storeSentMail };
+async function storeCreatedInbox(
+  email: string,
+  password: string,
+  date: Date,
+  ip: string
+): Promise<void> {
+  const inbox = new Mailbox({ email, password, date, ip });
+  await inbox.save();
+}
+
+async function markAsDeleted(email: string): Promise<void> {
+  await Mailbox.updateOne({ email }, { deleted: true });
+}
+
+export { initDB, storeSentMail, storeCreatedInbox, markAsDeleted };

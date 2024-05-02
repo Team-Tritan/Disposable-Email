@@ -4,6 +4,7 @@ import randomWords from "random-words";
 import Mailcow from "../lib/mailcow";
 import ImapWrapper from "../lib/imap";
 import { config } from "../config";
+import { markAsDeleted, storeCreatedInbox } from "../lib/db";
 
 const route = Router();
 const usernameRegex = /[A-Za-z-_0-9]/gm;
@@ -56,6 +57,11 @@ route.patch("/", async (req, res) => {
  * PUT: /api/mailbox
  */
 route.put("/", async (req, res) => {
+  const ip =
+    req.headers["x-forwarded-for"]?.toString() ||
+    req.connection.remoteAddress?.toString() ||
+    "";
+
   const username = req.body.username
     ? req.body.username
     : `${randomWords(1)}.${randomBytes(3).toString("hex")}`;
@@ -124,6 +130,13 @@ route.put("/", async (req, res) => {
     }
   }
 
+  await storeCreatedInbox(
+    `${username}@${randomDomain}`,
+    password,
+    new Date(),
+    ip
+  );
+
   return res.status(200).json({
     error: false,
     status: 200,
@@ -157,6 +170,8 @@ route.delete("/", async (req, res) => {
       status: 500,
       message: "internal server error!",
     });
+
+  await markAsDeleted(username);
 
   return res.status(200).json({
     error: false,
