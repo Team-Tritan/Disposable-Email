@@ -7,6 +7,7 @@ interface IConfig {
   smtpServer: string;
   smtpPort: string;
   port: number;
+  dbURI: string;
 }
 
 export const config: IConfig = {
@@ -18,4 +19,5 @@ export const config: IConfig = {
   smtpServer: "mail.as393577.net",
   smtpPort: "587",
   port: 4000,
+  dbURI: "mongodb://data.myinfra.lol:27017/TempMail",
 };

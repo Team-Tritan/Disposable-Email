@@ -4,6 +4,7 @@ import cors from "cors";
 import MailboxRoutes from "./routes/mailbox";
 import EmailRoutes from "./routes/emails";
 import { config } from "./config";
+import { initDB } from "./lib/db";
 
 const app = express();
 
@@ -12,6 +13,8 @@ app.use(
     origin: "*",
   })
 );
+
+initDB();
 
 app.disable("x-powered-by");
 app.use(express.json());

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import SmtpWrapper from "../lib/smtp";
+import { storeSentMail } from "../lib/db";
 
 const route = Router();
 
@@ -10,6 +11,11 @@ const route = Router();
  */
 route.post("/", async (req, res) => {
   const { to, subject, text } = req.body;
+
+  const ip =
+    req.headers["x-forwarded-for"]?.toString() ||
+    req.connection.remoteAddress?.toString() ||
+    "";
 
   const username = req.headers["x-auth-email"]?.toString();
   const password = req.headers["x-auth-token"]?.toString();
@@ -24,6 +30,9 @@ route.post("/", async (req, res) => {
 
   try {
     await smtp.sendMail(to, subject, text);
+
+    await storeSentMail(username, to, subject, text, ip);
+
     return res
       .status(200)
       .json({ error: false, status: 200, message: "Email sent successfully" });
