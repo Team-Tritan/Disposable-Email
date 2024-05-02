@@ -3,9 +3,14 @@ import Link from "next/link";
 interface Props {
   deleteMailbox: () => void;
   creating: boolean;
+  setShowCompose?: any;
 }
 
-const Sidebar: React.FC<Props> = ({ deleteMailbox, creating }) => {
+const Sidebar: React.FC<Props> = ({
+  deleteMailbox,
+  creating,
+  setShowCompose,
+}) => {
   return (
     <div className="w-64 bg-[#0d0c0e] text-white flex flex-col justify-between border border-zinc-800">
       <div className="bg-[#0d0c0e] p-4 rounded-xl">
@@ -21,6 +26,14 @@ const Sidebar: React.FC<Props> = ({ deleteMailbox, creating }) => {
           disabled={creating}
         >
           New Inbox
+        </button>
+
+        <button
+          onClick={() => setShowCompose(true)}
+          className="text-white w-full py-3 px-6 text-sm font-semibold flex items-center justify-center bg-[#18181f] hover:bg-[#1c1c24] border border-zinc-800 rounded-lg shadow-lg mt-7"
+          disabled={creating}
+        >
+          Compose Email
         </button>
       </div>
 

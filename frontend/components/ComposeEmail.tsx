@@ -1,12 +1,36 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 
-const ComposeEmail = () => {
+interface Props {
+  setShowCompose: any;
+  toast: any;
+}
+
+const ComposeEmail: React.FC<Props> = ({ setShowCompose, toast }) => {
   const [to, setTo] = useState("");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
+
+    fetch("/api/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-email": localStorage.getItem("tritan_tempmail_user") || "",
+        "x-auth-token": localStorage.getItem("tritan_tempmail_pw") || "",
+      },
+      body: JSON.stringify({ to, subject, text: body }),
+    }).then((res) => {
+      if (res.status !== 200) {
+        return toast.info("Failed to send email, please try again.");
+      }
+
+      toast.info("Email sent successfully!");
+    });
+
+    setShowCompose(false);
   };
 
   // WIP, shut up
