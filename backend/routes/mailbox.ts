@@ -58,7 +58,7 @@ route.patch("/", async (req, res) => {
 route.put("/", async (req, res) => {
   const username = req.body.username
     ? req.body.username
-    : `${randomWords(1)}.${randomBytes(5).toString("hex")}`;
+    : `${randomWords(1)}.${randomBytes(3).toString("hex")}`;
   const password = req.body.password
     ? req.body.password
     : `${randomBytes(22).toString("hex")}`;
