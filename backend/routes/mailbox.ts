@@ -85,8 +85,11 @@ route.put("/", async (req, res) => {
 
   const mailcow = new Mailcow(config.mailcowAPIKey);
 
+  let randomDomain =
+    config.domains[Math.floor(Math.random() * config.domains.length)];
+
   const mailcowRes = await mailcow.createMailbox({
-    domain: config.domain,
+    domain: randomDomain,
     name: username,
     password: password,
     quota: "40",
@@ -128,7 +131,7 @@ route.put("/", async (req, res) => {
   return res.status(200).json({
     error: false,
     status: 200,
-    email: `${username}@${config.domain}`,
+    email: `${username}@${randomDomain}`,
     password: password,
   });
 });
