@@ -10,8 +10,8 @@ import { Mailbox } from "../models/mailbox";
  * @returns {Promise<void>} A promise that resolves once the indexes are created.
  */
 async function createIndexes(): Promise<void> {
-  const mailboxCollection = mongoose.connection.collection("Mailbox");
-  const sentCollection = mongoose.connection.collection("Sent");
+  const mailboxCollection = Mailbox.collection;
+  const sentCollection = SentEmail.collection;
 
   const mailboxIndexes = await mailboxCollection.indexes();
   if (!mailboxIndexes.find((index) => index.name === "$**_text")) {
