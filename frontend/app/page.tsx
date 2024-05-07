@@ -33,7 +33,7 @@ export default function TempMail() {
     });
 
     if (response.status !== 200) {
-      return toast.error("Internal server error, please try again later.");
+      return toast.error("Failed to create temporary email, please try again.");
     }
 
     const data = await response.json();
@@ -77,9 +77,9 @@ export default function TempMail() {
       if (response.status !== 200 || !response.ok) {
         localStorage.removeItem("tritan_tempmail_user");
         localStorage.removeItem("tritan_tempmail_pw");
-        toast.info("Existing account expired, creating new mailbox.");
-
-        return createTemporaryEmail();
+        return toast.error(
+          "Unable to fetch mailbox data, please reload the page."
+        );
       }
 
       setLoading(false);
@@ -88,7 +88,7 @@ export default function TempMail() {
 
     const interval = setInterval(() => fetchMailboxData(), 5000);
     return () => clearInterval(interval);
-  }, [email, password, setLoading, setMailboxData, createTemporaryEmail]);
+  }, [email, password, setLoading, setMailboxData]);
 
   // Delete the mailbox
   const deleteMailbox = async () => {
