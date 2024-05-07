@@ -46,7 +46,8 @@ The frontend is built with Next.js and TypeScript. It uses Zustand for state man
    ```
 
 4. Auto build and run the application in production:
-   - Install docker, then run `sudo docker compose up -d`.
+   - [Install docker](https://docs.docker.com/engine/install/) 
+   - Run `sudo docker compose up -d`.
 
 ## Notes
 
