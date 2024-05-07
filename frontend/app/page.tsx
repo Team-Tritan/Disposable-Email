@@ -81,7 +81,7 @@ export default function TempMail() {
           "Existing mailbox likely expired or server error, creating new mailbox."
         );
 
-        await createTemporaryEmail();
+        return createTemporaryEmail();
       }
 
       setLoading(false);
