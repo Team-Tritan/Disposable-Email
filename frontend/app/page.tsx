@@ -33,7 +33,7 @@ export default function TempMail() {
     });
 
     if (response.status !== 200) {
-      return toast.error("Failed to create temporary email, please try again.");
+      return toast.error("Internal server error, please try again later.");
     }
 
     const data = await response.json();
@@ -77,9 +77,7 @@ export default function TempMail() {
       if (response.status !== 200 || !response.ok) {
         localStorage.removeItem("tritan_tempmail_user");
         localStorage.removeItem("tritan_tempmail_pw");
-        toast.error(
-          "Existing mailbox likely expired or server error, creating new mailbox."
-        );
+        toast.info("Existing account expired, creating new mailbox.");
 
         return createTemporaryEmail();
       }
