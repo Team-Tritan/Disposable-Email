@@ -1,0 +1,23 @@
+interface IConfig {
+  mailcowAPIKey: string;
+  mailcowBaseURL: string;
+  domains: string[];
+  imapServer: string;
+  imapPort: string;
+  smtpServer: string;
+  smtpPort: string;
+  port: number;
+  mongoURI: string;
+}
+
+export const config: IConfig = {
+  mailcowAPIKey: "",
+  mailcowBaseURL: "",
+  imapServer: "",
+  domains: [],
+  imapPort: "",
+  smtpServer: "",
+  smtpPort: "",
+  port: ,
+  mongoURI: "",
+};
