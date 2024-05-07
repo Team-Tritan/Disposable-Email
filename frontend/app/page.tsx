@@ -77,9 +77,11 @@ export default function TempMail() {
       if (response.status !== 200 || !response.ok) {
         localStorage.removeItem("tritan_tempmail_user");
         localStorage.removeItem("tritan_tempmail_pw");
-        return toast.error(
-          "Unable to fetch mailbox data, please reload the page."
+        toast.error(
+          "Existing mailbox likely expired or server error, creating new mailbox."
         );
+
+        await createTemporaryEmail();
       }
 
       setLoading(false);
@@ -88,7 +90,7 @@ export default function TempMail() {
 
     const interval = setInterval(() => fetchMailboxData(), 5000);
     return () => clearInterval(interval);
-  }, [email, password, setLoading, setMailboxData]);
+  }, [email, password, setLoading, setMailboxData, createTemporaryEmail]);
 
   // Delete the mailbox
   const deleteMailbox = async () => {
