@@ -4,12 +4,35 @@ import { SentEmail } from "../models/sent";
 import { Mailbox } from "../models/mailbox";
 
 /**
+ * Creates indexes for the Mailbox and Sent collections in the database.
+ *
+ * If the indexes do not exist, they will be created.
+ * @returns {Promise<void>} A promise that resolves once the indexes are created.
+ */
+async function createIndexes(): Promise<void> {
+  const mailboxCollection = mongoose.connection.collection("Mailbox");
+  const sentCollection = mongoose.connection.collection("Sent");
+
+  const mailboxIndexes = await mailboxCollection.indexes();
+  if (!mailboxIndexes.find((index) => index.name === "$**_text")) {
+    await mailboxCollection.createIndex({ "$**": "text" });
+  }
+
+  const sentIndexes = await sentCollection.indexes();
+  if (!sentIndexes.find((index) => index.name === "$**_text")) {
+    await sentCollection.createIndex({ "$**": "text" });
+  }
+}
+
+/**
  * Initialize the MongoDB connection
  * @returns Promise<void>
  */
 async function initDB(): Promise<void> {
   try {
     await mongoose.connect(config.mongoURI);
+    await createIndexes();
+
     console.log("> MongoDB connected");
   } catch (err) {
     console.error(err);
