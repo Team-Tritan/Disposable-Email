@@ -16,12 +16,10 @@ interface CreateMailbox {
  * @param {Axios} axios - The Axios instance
  * @method createMailbox - Create a mailbox
  */
-export default class MailcowWrapper {
-  private apiKey: string;
+export class MailcowWrapper {
   private axios: Axios;
 
-  constructor(apiKey: string) {
-    this.apiKey = apiKey;
+  constructor() {
     this.axios = axios.create({
       baseURL: config.mailcowBaseURL,
       headers: {
@@ -93,3 +91,5 @@ export default class MailcowWrapper {
       });
   }
 }
+
+export default new MailcowWrapper();

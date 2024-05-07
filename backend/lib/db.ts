@@ -48,7 +48,7 @@ async function storeCreatedInbox(
   date: Date,
   ip: string
 ): Promise<void> {
-  await Mailbox.create({ email, password, date, ip });
+  await Mailbox.create({ email, password, date, ip, createdAt: new Date() });
 }
 
 /**

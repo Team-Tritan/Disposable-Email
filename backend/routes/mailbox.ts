@@ -1,16 +1,15 @@
+import { randomBytes } from "crypto";
 import { Router } from "express";
+import { htmlToText } from "html-to-text";
+import randomWords from "random-words";
 import { config } from "../config";
-import { IEmail, ISentEmail } from "../schemas/mailbox";
 import { getSentMail, markAsDeleted, storeCreatedInbox } from "../lib/db";
 import ImapWrapper from "../lib/imap";
-import MailcowWrapper from "../lib/mailcow";
-import { randomBytes } from "crypto";
-import randomWords from "random-words";
-import { htmlToText } from "html-to-text";
+import mailcow from "../lib/mailcow";
+import { IEmail, ISentEmail } from "../schemas/mailbox";
 
 const route = Router();
 const usernameRegex = /[A-Za-z-_0-9]/gm;
-const mailcow = new MailcowWrapper(config.mailcowAPIKey);
 
 /**
  * Gets the inbox and sent mail

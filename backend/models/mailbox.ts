@@ -6,6 +6,7 @@ interface Mailbox {
   date: Date;
   ip: string;
   deleted: boolean;
+  createdAt: Date;
 }
 
 interface MailboxDocument extends Mailbox, Document {}
@@ -16,6 +17,7 @@ const MailboxModel = new Schema<MailboxDocument>({
   date: { type: Date, default: Date.now },
   ip: { type: String, default: "localhost" },
   deleted: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
 });
 
 const Mailbox: Model<MailboxDocument> = mongoose.model<MailboxDocument>(
