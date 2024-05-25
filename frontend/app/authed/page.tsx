@@ -66,6 +66,16 @@ const AuthedMail = () => {
     }
   }, [email, password, setLoading, setMailboxData, setIsLoggedIn]);
 
+  useEffect(() => {
+    let intervalId: any;
+    if (isLoggedIn) {
+      intervalId = setInterval(fetchMailboxData, 15000);
+    }
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isLoggedIn, fetchMailboxData]);
+
   // Delete the mailbox
   const deleteMailbox = async () => {
     toast.info("Logged out successfully.");
