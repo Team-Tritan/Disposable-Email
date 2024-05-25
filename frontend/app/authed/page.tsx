@@ -69,7 +69,7 @@ const AuthedMail = () => {
   useEffect(() => {
     let intervalId: any;
     if (isLoggedIn) {
-      intervalId = setInterval(fetchMailboxData, 15000);
+      intervalId = setInterval(fetchMailboxData, 5000);
     }
     return () => {
       clearInterval(intervalId);
