@@ -155,7 +155,7 @@ class ImapWrapper extends EventEmitter {
                         from: mail.from?.text || "",
                         subject: mail.subject || "",
                         // @ts-ignore
-                        to: mail.to.text || "",
+                        to: mail?.to?.text || "",
                       };
 
                       resolve(mail_);
