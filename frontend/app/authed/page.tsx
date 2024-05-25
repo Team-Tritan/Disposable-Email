@@ -60,8 +60,6 @@ const AuthedMail = () => {
     toast.info("Logged out successfully.");
     setMailboxData(null);
     setSelectedMessage(null);
-    localStorage.removeItem("tritan_tempmail_user");
-    localStorage.removeItem("tritan_tempmail_pw");
     return setIsLoggedIn(false);
   };
 

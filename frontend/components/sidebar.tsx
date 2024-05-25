@@ -19,7 +19,7 @@ const Sidebar: React.FC<Props> = ({ deleteMailbox }) => {
     <div className="w-64 bg-[#0d0c0e] text-white flex flex-col justify-between border border-zinc-800">
       <div className="bg-[#0d0c0e] p-4 rounded-xl">
         <div className="text-lg font-semibold mb-1 mt-1 pb-4 text-center text-white border-b border-zinc-800">
-          <Link href="https://email.tritan.gg">Tritan Disposable Mail</Link>
+          <Link href="https://mailbox.tritan.gg">Tritan Disposable Mail</Link>
         </div>
       </div>
 
