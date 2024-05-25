@@ -57,7 +57,7 @@ route.patch("/", async (req, res) => {
   });
 
   imap.on("error", (e: any) => {
-    console.error(`[IMAP Fetch Error]` + e);
+    console.error(`[IMAP Fetch Error] ` + e);
     return res.status(401).json({
       error: true,
       status: 401,
