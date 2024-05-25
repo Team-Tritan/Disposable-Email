@@ -58,6 +58,8 @@ const AuthedMail = () => {
   // Delete the mailbox
   const deleteMailbox = async () => {
     toast.info("Logged out successfully.");
+    setEmail("");
+    setPassword("");
     setMailboxData(null);
     setSelectedMessage(null);
     return setIsLoggedIn(false);
