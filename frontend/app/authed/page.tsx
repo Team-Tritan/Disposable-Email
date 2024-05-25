@@ -27,33 +27,44 @@ const AuthedMail = () => {
 
   // Fetch mailbox data
   const fetchMailboxData = useCallback(async () => {
-    const response = await fetch(`/api/mailbox`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Auth-Email": email,
-        "X-Auth-Token": password,
-      },
-    });
+    const controller = new AbortController();
+    const { signal } = controller;
 
-    if (response.status !== 200 || !response.ok) {
-      toast.error("Authentication failed, please relogin.");
-      return setIsLoggedIn(false);
+    const timeoutDuration = 60000;
+
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+      toast.error("Request timed out. Please try again later.");
+    }, timeoutDuration);
+
+    try {
+      const response = await fetch(`/api/mailbox`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Auth-Email": email,
+          "X-Auth-Token": password,
+        },
+        signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.status !== 200 || !response.ok) {
+        toast.error("Authentication failed, please relogin.");
+        return setIsLoggedIn(false);
+      }
+
+      setLoading(false);
+      setMailboxData(await response.json());
+    } catch (error: Error | any) {
+      if (error.name === "AbortError") {
+        console.error("Request aborted due to timeout");
+      } else {
+        console.error("Fetch error:", error.message);
+      }
     }
-
-    setLoading(false);
-    setMailboxData(await response.json());
-  }, [email, password, setLoading, setMailboxData]);
-
-  useEffect(() => {
-    let intervalId: any;
-    if (isLoggedIn) {
-      intervalId = setInterval(fetchMailboxData, 15000);
-    }
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [isLoggedIn, fetchMailboxData]);
+  }, [email, password, setLoading, setMailboxData, setIsLoggedIn]);
 
   // Delete the mailbox
   const deleteMailbox = async () => {
