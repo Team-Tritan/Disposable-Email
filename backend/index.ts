@@ -1,11 +1,20 @@
 import express from "express";
+import { Server } from "socket.io";
+import http from "http";
 import { config } from "./config";
 import { initDB } from "./lib/db";
 import MailboxRoutes from "./routes/mailbox";
 import EmailRoutes from "./routes/email";
 import cors from "cors";
+import MailboxSocket from "./lib/ws";
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 app.use(
   cors({
@@ -29,6 +38,9 @@ app.all("*", (_, res) => {
   });
 });
 
-app.listen(config.port, () => {
+const mailboxSocket = new MailboxSocket(io);
+mailboxSocket.initialize();
+
+server.listen(config.port, () => {
   console.log(`> API started on port ${config.port}`);
 });

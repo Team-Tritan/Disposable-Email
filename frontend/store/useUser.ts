@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { IEmail, IMailbox } from "@schemas/mailbox";
+import { Socket } from "socket.io-client";
 
 // Define the global state for the user
 interface State {
@@ -11,6 +12,8 @@ interface State {
   creating: boolean;
   showCompose: boolean;
   showSent: boolean;
+  socket: any;
+  setSocket: (socket: any) => void;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
   setMailboxData: (mailboxData: IMailbox | null) => void;
@@ -30,7 +33,9 @@ const useUser = create<State>((set) => ({
   loading: true,
   creating: false,
   showCompose: false,
+  socket: null,
   showSent: false,
+  setSocket: (socket) => set({ socket }),
   setEmail: (email) => set({ email }),
   setPassword: (password) => set({ password }),
   setMailboxData: (mailboxData) => set({ mailboxData }),
