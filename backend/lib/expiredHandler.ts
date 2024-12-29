@@ -1,6 +1,6 @@
 import { Mailbox } from "../models/mailbox";
 import { markAsDeleted } from "./db";
-import mailcow from "./mailcow";
+import mailcow from "./posteIO";
 
 setInterval(async () => {
   try {

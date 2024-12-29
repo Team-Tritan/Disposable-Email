@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { config } from "../config";
 import ImapWrapper from "./imap";
-import mailcow from "./mailcow";
+import mailcow from "./posteIO";
 import SmtpWrapper from "./smtp";
 import {
   getSentMail,

@@ -5,7 +5,7 @@ import randomWords from "random-words";
 import { config } from "../config";
 import { getSentMail, markAsDeleted, storeCreatedInbox } from "../lib/db";
 import ImapWrapper from "../lib/imap";
-import mailcow from "../lib/mailcow";
+import apiWrapper from "../lib/posteIO";
 import { IEmail, ISentEmail } from "../schemas/mailbox";
 
 const route = Router();
@@ -95,34 +95,12 @@ route.put("/", async (req, res) => {
   let randomDomain =
     config.domains[Math.floor(Math.random() * config.domains.length)];
 
-  const mailcowRes = await mailcow.createMailbox({
-    domain: randomDomain,
+  await apiWrapper.createMailbox({
     name: username,
-    password: password,
-    quota: "40",
-    forcePwUpdate: "0",
+    email: `${username}@${randomDomain}`,
+    passwordPlaintext: password,
+    disabled: false,
   });
-
-  if (!mailcowRes)
-    return res.status(500).json({
-      error: true,
-      message: "internal server error!",
-    });
-
-  if (mailcowRes[0] && mailcowRes[0].type == "danger") {
-    let errorMessage = "Internal server error!";
-    if (mailcowRes[0].msg.includes("password_complexity")) {
-      errorMessage = "Password does not meet complexity requirements";
-    } else if (mailcowRes[0].msg.includes("object_exists")) {
-      errorMessage = "Username taken";
-    }
-    return res.status(400).json({
-      error: true,
-      status: 400,
-      validation_field: mailcowRes[0].msg,
-      message: errorMessage,
-    });
-  }
 
   const ip =
     req.headers["x-forwarded-for"]?.toString() ||
@@ -161,14 +139,7 @@ route.delete("/", async (req, res) => {
       message: "Email or password not provided!",
     });
 
-  const mailcowRes = await mailcow.deleteMailbox(username);
-
-  if (!mailcowRes)
-    return res.status(500).json({
-      error: true,
-      status: 500,
-      message: "internal server error!",
-    });
+  await apiWrapper.deleteMailbox(username);
 
   await markAsDeleted(username);
 

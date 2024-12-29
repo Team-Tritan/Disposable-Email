@@ -1,6 +1,7 @@
 interface IConfig {
-  mailcowAPIKey: string;
-  mailcowBaseURL: string;
+  posteIOBaseURL: string;
+  posteIOUsername: string;
+  posteIOPassword: string;
   domains: string[];
   imapServer: string;
   imapPort: string;
@@ -11,8 +12,9 @@ interface IConfig {
 }
 
 export const config: IConfig = {
-  mailcowAPIKey: "",
-  mailcowBaseURL: "",
+  posteIOBaseURL: "",
+  posteIOUsername: "",
+  posteIOPassword: "!",
   imapServer: "",
   domains: [],
   imapPort: "",
